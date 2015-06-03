@@ -123,7 +123,7 @@ namespace UserManager
                 RegisterRepository<OrganizationGroupItem > (cn);
                 RegisterRepository<OrganizationGroupRoleItem>(cn);
                 RegisterRepository<OrganizationUserItem>(cn);
-                
+                RegisterRepository<OrganizationGroupUserItem>(cn);
             }
         }
 

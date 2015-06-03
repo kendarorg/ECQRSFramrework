@@ -50,7 +50,9 @@
     <Compile Include="Aggregate\Role.cs" />
     <Compile Include="Aggregate\Group.cs" />
     <Compile Include="Commands\OrganizationAssociateUser.cs" />
+    <Compile Include="Commands\OrganizationUserGroupAssociate.cs" />
     <Compile Include="Commands\OrganizationDeassociateUser.cs" />
+    <Compile Include="Commands\OrganizationUserGroupDissociate.cs" />
     <Compile Include="Events\OrganizationUserAssociated.cs" />
     <Compile Include="Events\OrganizationUserDeassociated.cs" />
     <Compile Include="OrganizationCommandHandler.cs" />
@@ -76,6 +78,7 @@
     <Compile Include="Events\OrganizationGroupRoleAdded.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadModel\OrganizationDetailView.cs" />
+    <Compile Include="ReadModel\OrganizationGroupsUsersView.cs" />
     <Compile Include="ReadModel\OrganizationUserView.cs" />
     <Compile Include="ReadModel\OrganizationListView.cs" />
     <Compile Include="ReadModel\OrganizationRoleView.cs" />

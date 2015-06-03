@@ -1,4 +1,7 @@
-﻿
+﻿The order for dependant items should be
+	"Selected/Others"
+
+
 The organization should expose the choice for group for all the available roles 
 associated by the application
 

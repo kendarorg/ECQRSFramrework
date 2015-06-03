@@ -88,6 +88,7 @@ organizations.controller('groupEditController', ['$scope', '$http', '$location',
 	        $scope: $scope,
 	        panes: [
 			    { selected: true, title: "Data", address: "app/organization/group/edit/_data.html" },
+			    { selected: false, title: "Users", address: "app/organization/group/user/_list.html" },
 			    { selected: false, title: "Roles", address: "app/organization/group/role/_list.html" }
 	        ]
 	    });

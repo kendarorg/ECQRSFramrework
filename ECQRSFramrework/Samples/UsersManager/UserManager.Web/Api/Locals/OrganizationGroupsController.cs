@@ -39,6 +39,7 @@ using UserManager.Model.Organizations;
 using UserManager.Core.Users.ReadModel;
 using UserManager.Core.Users.Commands;
 using UserManager.Core.Applications.ReadModel;
+using UserManager.Organizations.Commands;
 
 namespace UserManager.Api
 {
@@ -48,8 +49,10 @@ namespace UserManager.Api
         private readonly IRepository<OrganizationGroupRoleItem> _groupsRoles;
         private readonly IRepository<OrganizationRoleItem> _roles;
         private readonly IRepository<UserListItem> _users;
+        private IRepository<OrganizationUserItem> _orgUsers;
         private readonly ICommandSender _bus;
         private IRepository<ApplicationRoleItem> _applicationRoles;
+        private IRepository<OrganizationGroupUserItem> _groupUsers;
 
         public OrganizationGroupsController(
             IRepository<OrganizationGroupItem> list,
@@ -57,6 +60,8 @@ namespace UserManager.Api
             IRepository<OrganizationRoleItem> roles,
             IRepository<UserListItem> users,
             IRepository<ApplicationRoleItem> applicationRoles,
+            IRepository<OrganizationUserItem> orgUsers,
+            IRepository<OrganizationGroupUserItem> groupUsers,
             ICommandSender bus)
         {
             _groups = list;
@@ -65,6 +70,8 @@ namespace UserManager.Api
             _roles = roles;
             _users = users;
             _applicationRoles = applicationRoles;
+            _orgUsers = orgUsers;
+            _groupUsers = groupUsers;
         }
 
         // GET: api/Organizations
@@ -146,13 +153,13 @@ namespace UserManager.Api
             var allRolesList = allRoles.ToList();
 
             //Takes all the available roles for the organization
-            var availableRoles = _roles.Where(a => a.OrganizationId == organizationId.Value).ToList().Select(r=>r.RoleId);
+            var availableRoles = _roles.Where(a => a.OrganizationId == organizationId.Value).ToList().Select(r => r.RoleId);
 
             //Take only the role instance available
             allRolesList = allRolesList.Where(r => availableRoles.Contains(r.Id)).ToList();
 
             //Takes the roles used by the current group
-            var associatedRoles = _groupsRoles.Where(p=>p.GroupId==groupId.Value && p.OrganizationId==organizationId.Value).ToList();
+            var associatedRoles = _groupsRoles.Where(p => p.GroupId == groupId.Value && p.OrganizationId == organizationId.Value).ToList();
 
             return allRolesList
                 .Skip(parsedRange.From).Take(parsedRange.Count)
@@ -194,5 +201,56 @@ namespace UserManager.Api
                 GroupRoleId = item.Id
             });
         }
+
+        // GET: api/Organizations
+        [Route("api/OrganizationUsers/list/{organizationId}/{groupId}")]
+        public IEnumerable<OrganizationGroupUserModel> GetGroupUsers(Guid organizationId, Guid groupId, string range = null, string filter = null)
+        {
+            if (organizationId == Guid.Empty) throw new HttpException(400, "Invalid organization Id");
+            if (groupId == Guid.Empty) throw new HttpException(400, "Invalid group Id");
+            var parsedRange = AngularApiUtils.ParseRange(range);
+            var parsedFilters = AngularApiUtils.ParseFilter(filter);
+
+            var where = _users.Where();
+            if (parsedFilters.ContainsKey("EMail")) where = where.Where(a => a.EMail.Contains(parsedFilters["EMail"].ToString()));
+            if (parsedFilters.ContainsKey("UserName")) where = where.Where(a => a.UserName.Contains(parsedFilters["UserName"].ToString()));
+
+            var organizationUsers = _orgUsers.Where(u => u.OrganizationId == organizationId).ToList().Select(u => u.UserId).ToList();
+            var groupUserIds = _groupUsers.Where(u => u.OrganizationId == organizationId && u.GroupId == groupId)
+                .ToList();
+
+
+            return where
+                .Where(u => organizationUsers.Contains(u.Id))
+                .Skip(parsedRange.From).Take(parsedRange.Count)
+                .ToList()
+                .Select(u=>u.ToOrganizationGroupUserModel(groupUserIds,organizationId,groupId));
+        }
+
+        [HttpPost]
+        [Route("api/OrganizationUsers/{organizationId}/{groupId}/{userId}")]
+        public void AssociateUserWithGroup(Guid organizationId, Guid groupId, Guid userId)
+        {
+            _bus.Send(new OrganizationUserGroupAssociateCommon
+            {
+                OrganizationId = organizationId,
+                GroupId = groupId,
+                UserId = userId,
+                Id = Guid.NewGuid()
+            });
+        }
+
+        [HttpDelete]
+        [Route("api/OrganizationUsers/{organizationId}/{groupId}/{userId}")]
+        public void RemoveUserFromGroup(Guid organizationId, Guid groupId, Guid userId)
+        {
+            _bus.Send(new OrganizationUserGroupDissociateCommon
+            {
+                OrganizationId = organizationId,
+                GroupId = groupId,
+                UserId = userId
+            });
+        }
     }
+
 }

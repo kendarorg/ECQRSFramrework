@@ -95,5 +95,30 @@ namespace UserManager.Commons.Groups
                 UserId = message.UserId
             });
         }
+
+        public void Handle(OrganizationUserGroupAssociateCommon message)
+        {
+            //For the Group
+            _sender.Send(new OrganizationUserGroupAssociate
+            {
+                CorrelationId = message.CorrelationId,
+                UserId = message.UserId,
+                GroupId = message.GroupId,
+                 OrganizationId = message.OrganizationId,
+                 Id =message.Id
+            });
+        }
+
+        public void Handle(OrganizationUserGroupDissociateCommon message)
+        {
+            //For the Group
+            _sender.Send(new OrganizationUserGroupDissociate
+            {
+                CorrelationId = message.CorrelationId,
+                UserId = message.UserId,
+                GroupId = message.GroupId,
+                OrganizationId = message.OrganizationId
+            });
+        }
     }
 }

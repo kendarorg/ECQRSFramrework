@@ -50,7 +50,6 @@ namespace UserManager.Api
         private readonly IRepository<OrganizationRoleItem> _roles;
         private readonly IRepository<UserListItem> _users;
         private readonly ICommandSender _bus;
-        private IRepository<ApplicationRoleItem> _applicationRoles;
         private IRepository<OrganizationUserItem> _orgUsers;
 
         public OrganizationUsersController(

@@ -230,6 +230,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Model\Organizations\OrganizationCreateModel.cs" />
+    <Compile Include="Model\Organizations\OrganizationGroupUserModel.cs" />
     <Compile Include="Model\Organizations\OrganizationModifyModel.cs" />
     <Compile Include="Model\Organizations\OrganizationRoleCreateModel.cs" />
     <Compile Include="Model\Organizations\OrganizationGroupCreateModel.cs" />
@@ -251,6 +252,8 @@
     <Content Include="app\app.js" />
     <Content Include="app\organization\edit.html" />
     <Content Include="app\organization\edit\_data.html" />
+    <Content Include="app\organization\group\user\module.js" />
+    <Content Include="app\organization\group\user\_list.html" />
     <Content Include="app\organization\list.html" />
     <Content Include="app\organization\module.js" />
     <Content Include="app\organization\new.html" />

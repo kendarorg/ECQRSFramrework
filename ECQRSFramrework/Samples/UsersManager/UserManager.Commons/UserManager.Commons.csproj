@@ -43,6 +43,8 @@
     <Compile Include="Applications\ApplicationsCommandHandler.cs" />
     <Compile Include="Applications\DeleteCommonRole.cs" />
     <Compile Include="Groups\CreateUserWithGroup.cs" />
+    <Compile Include="Groups\OrganizationUserGroupAssociateCommon.cs" />
+    <Compile Include="Groups\OrganizationUserGroupDissociateCommon.cs" />
     <Compile Include="Groups\UsersCommandHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

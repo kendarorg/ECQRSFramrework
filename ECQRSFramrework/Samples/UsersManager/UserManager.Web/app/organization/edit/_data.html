@@ -1,0 +1,9 @@
+﻿<form novalidate name="editForm" id="edit-form" group="form" ng-submit="update()">
+    <div>
+        <input type="hidden" ng-model="data.Id" />
+        <div class="form-group">
+            <label for="Name">Name</label>
+            <input type="text" class="form-control" ng-model="data.Name" required sg-show-error />
+        </div>
+    </div>
+</form>

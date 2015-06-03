@@ -1,0 +1,36 @@
+<div ng-controller="userNewController">
+    <form novalidate name="addNewForm" id="add-new-form" role="form" ng-submit="save()">
+        <div>
+
+            <div class="form-group">
+                <label for="FirstName">FirstName</label>
+                <input type="text" class="form-control" ng-model="data.FirstName" />
+            </div>
+            <div class="form-group">
+                <label for="LastName">LastName</label>
+                <input type="text" class="form-control" ng-model="data.LastName" />
+            </div>
+            <div class="form-group">
+                <sg-dropdown sg-placeholder="Group..." sg-list="availableOrganizations" sg-key="key" sg-value="value" ng-model="data.OrganizationId"></sg-dropdown>
+            </div>
+
+            <div class="form-group">
+                <label for="EMail">EMail</label>
+                <input type="email" class="form-control" ng-model="data.EMail" required sg-show-error />
+            </div>
+            <div class="form-group">
+                <label for="UserName">UserName</label>
+                <input type="text" class="form-control" ng-model="data.UserName" required sg-show-error />
+            </div>
+
+            <div class="form-group">
+                <label for="Source">Password</label>
+                <input type="password" class="form-control" ng-model="data.Password" required sg-show-error  />
+            </div>
+            <div class="form-group">
+                <label for="SourceData">Confirm</label>
+                <input type="password" class="form-control" ng-model="data.PasswordConfirm" required sg-show-error sg-compare-to="data.Password" />
+            </div>
+        </div>
+    </form>
+</div>

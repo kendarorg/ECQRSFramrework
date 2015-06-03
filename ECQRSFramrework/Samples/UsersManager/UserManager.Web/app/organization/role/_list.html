@@ -1,0 +1,63 @@
+﻿<div ng-controller="organizationRolesListController">
+    <form class="form-inline" aria-label="...">
+
+        <div class="form-group">
+            <div class="input-group">
+                <a class="btn btn-default btn-sm" ng-click="addNew()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+            </div>
+        </div>
+        <div class="form-group">
+            <input class="form-control input-sm" type="text" ng-model="filter.ApplicationName" placeholder="ApplicationName">
+        </div>
+        <div class="form-group">
+            <input class="form-control input-sm" type="text" ng-model="filter.Code" placeholder="Code">
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <a class="btn btn-default btn-sm" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+                <a class="btn btn-default btn-sm" ng-click="resetSearch()"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
+            </div>
+        </div>
+        <div class="form-group">
+            <sg-dropdown sg-placeholder="Size..." sg-list="[5,10,25,50,100]" ng-model="pageSize"></sg-dropdown>
+        </div>
+    </form>
+    <div sg-grid
+         ng-model="data"
+         sg-page-size="pageSize"
+         sg-load-data="loadData"
+         sg-max-pages="maxPages"
+         sg-current-page="currentPage"
+         sg-count="listTotal"
+         sg-buttons="buttons">
+        <nav>
+            <ul class="pagination">
+                <li ng-repeat="button in buttons" ng-class="{'active':button.selected}">
+                    <a ng-click="button.go()">{{button.label}}</a>
+                </li>
+            </ul>
+        </nav>
+        <table class="table">
+            <tr><th>Application</th><th>Code</th><th>&nbsp;</th></tr>
+            <tr ng-repeat="role in data">
+                <td>{{role.ApplicationName}}</td>
+                <td>{{role.Code}}</td>
+                <td>
+                    <button ng-if="role.Assigned" type="button" disabled class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    </button>
+                    <button ng-if="!role.Assigned" type="button" disabled class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
+
+                    <button ng-if="role.Assigned" type="button" class="btn btn-default btn-sm" ng-click="dissociate(role)">
+                        <span class="fa fa-chain-broken" aria-hidden="true"></span>
+                    </button>
+                    <button ng-if="!role.Assigned" type="button" class="btn btn-default btn-sm" ng-click="associate(role)">
+                        <span class="fa fa-link" aria-hidden="true"></span>
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

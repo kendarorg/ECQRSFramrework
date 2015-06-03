@@ -1,0 +1,45 @@
+﻿/* Errors classes */
+.item-ko{
+	border-color: red;
+	color: red;
+}
+.item-ko:focus{
+	border-color: red;
+	color: red;
+}
+.item-ko .input-group-addon{
+	border-color: red;
+}
+.item-ko .form-control{
+	border-color: red;
+}
+.item-ko button{
+	border-color: red;
+}
+.item-ko textarea{
+	border-color: red;
+}
+
+.error-description{
+	color: red;
+}
+
+/* Ok classes */
+.item-ok{
+	border-color: green;
+}
+.item-ok:focus{
+	border-color: green;
+}
+.item-ok .input-group-addon{
+	border-color: green;
+}
+.item-ok .form-control{
+	border-color: green;
+}
+.item-ok button{
+	border-color: green;
+}
+.item-ok textarea{
+	border-color: green;
+}

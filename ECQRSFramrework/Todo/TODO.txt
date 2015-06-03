@@ -1,0 +1,13 @@
+﻿
+The organization should expose the choice for group for all the available roles 
+associated by the application
+
+
+http://www.codeproject.com/Articles/5353/Custom-Authentication-provider-by-implementing-IHt
+
+All available roles->non specific for application
+
+
+Should propagate :
+	Role code change to Organizations
+	Application name change to Organizations

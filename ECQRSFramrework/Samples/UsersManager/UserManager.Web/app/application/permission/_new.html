@@ -1,0 +1,15 @@
+<div ng-controller="applicationPermissionNewController">
+    <form novalidate name="addNewForm" id="add-new-form" role="form" ng-submit="save()">
+        <div>
+
+            <div class="form-group">
+                <label for="Code">Code</label>
+                <input type="text" class="form-control" ng-model="data.Code" required sg-show-error />
+            </div>
+            <div class="form-group">
+                <label for="Description">Description</label>
+                <input type="text" class="form-control" ng-model="data.Description" />
+            </div>
+        </div>
+    </form>
+</div>

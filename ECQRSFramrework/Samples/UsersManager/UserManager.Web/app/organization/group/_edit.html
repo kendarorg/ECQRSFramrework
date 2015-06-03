@@ -1,0 +1,11 @@
+<div ng-controller="groupEditController">
+    <div class="tabbable">
+        <ul class="nav nav-tabs">
+            <li ng-repeat="pane in panes" ng-class="{active:pane.selected}">
+                <a href="" ng-click="selectPane(pane)">{{pane.title}}</a>
+            </li>
+        </ul>
+        <div ng-repeat="pane in panes" ng-if="pane.selected" class="tab-content" style="padding: 15px" ng-include="pane.address">
+        </div>
+    </div>
+</div>

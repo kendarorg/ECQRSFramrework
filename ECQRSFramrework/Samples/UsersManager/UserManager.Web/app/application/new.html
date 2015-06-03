@@ -1,0 +1,11 @@
+<div ng-controller="applicationNewController">
+    <form novalidate name="addNewForm" id="add-new-form" role="form" ng-submit="save()">
+        <div>
+
+            <div class="form-group">
+                <label for="Name">Name</label>
+                <input type="text" class="form-control" ng-model="data.Name" required sg-show-error />
+            </div>
+        </div>
+    </form>
+</div>

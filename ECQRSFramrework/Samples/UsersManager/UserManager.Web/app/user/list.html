@@ -1,0 +1,66 @@
+<div ng-controller="usersListController">
+    <form class="form-inline" aria-label="...">
+
+        <div class="form-group">
+            <div class="input-group">
+                <a class="btn btn-default btn-sm" ng-click="addNew()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+            </div>
+        </div>
+        <div class="form-group">
+            <input class="form-control input-sm" type="text" ng-model="filter.EMail" placeholder="EMail">
+        </div>		
+        <div class="form-group">
+            <input class="form-control input-sm" type="text" ng-model="filter.UserName" placeholder="UserName">
+        </div>		
+        <!--<div class="form-group">
+            <input class="form-control input-sm" type="text" ng-model="filter.FirstName" placeholder="FirstName">
+        </div>		
+        <div class="form-group">
+            <input class="form-control input-sm" type="text" ng-model="filter.LastName" placeholder="LastName">
+        </div>-->
+        <div class="form-group">
+            <div class="input-group">
+                <a class="btn btn-default btn-sm" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+                <a class="btn btn-default btn-sm" ng-click="resetSearch()"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
+            </div>
+        </div>
+        <div class="form-group">
+            <sg-dropdown sg-placeholder="Size..." sg-list="[10,25,50,100]" ng-model="pageSize"></sg-dropdown>
+        </div>
+    </form>
+    <div sg-grid
+         ng-model="data"
+         sg-page-size="pageSize"
+         sg-load-data="loadData"
+         sg-max-pages="maxPages"
+         sg-current-page="currentPage"
+         sg-count="listTotal"
+         sg-buttons="buttons">
+        <nav>
+            <ul class="pagination">
+                <li ng-repeat="button in buttons" ng-class="{'active':button.selected}">
+                    <a ng-click="button.go()">{{button.label}}</a>
+                </li>
+            </ul>
+        </nav>
+        <table class="table">
+            <tr>
+                <!--<th>FirstName</th><th>LastName</th>-->
+            <th>EMail</th><th>UserName</th><th>&nbsp;</th></tr>
+            <tr ng-repeat="user in data">
+                <!--<td>{{user.FirstName}}</td>
+                <td>{{user.LastName}}</td>-->
+                <td>{{user.EMail}}</td>
+                <td>{{user.UserName}}</td>
+                <td>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="editDetail(user)">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="delete(user)">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

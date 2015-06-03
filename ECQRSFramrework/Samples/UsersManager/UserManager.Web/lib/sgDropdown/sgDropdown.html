@@ -1,0 +1,13 @@
+<div class="dropdown inDropdown">
+	<button class="btn btn-default btn-sm dropdown-toggle inDropdown" type="button" aria-expanded="true"
+			ng-click="show();">
+		<span class="inDropdown" 
+			ng-if="!isPlaceholder">{{selectedValue}}</span><span 
+			ng-if="isPlaceholder" class="placeholder inDropdown" >{{placeholder}}</span>
+		<span class="caret inDropdown"></span>
+	</button>
+	<ul class="dropdown-menu inDropdown" role="menu" ng-class="{'sgDropdownVisible':listVisible}">
+		<li ng-repeat="item in list" role="presentation" class="inDropdown"><a role="menuitem" class="inDropdown" tabindex="-1" ng-click="select(item)" >
+			{{value !== undefined ? item[value] : item}}</a></li>
+	</ul>
+</div>

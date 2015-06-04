@@ -45,6 +45,8 @@ namespace UserManager.Core.Organizations.ReadModel
         public Guid OrganizationId { get; set; }
         public Guid GroupId { get; set; }
         public Guid UserId { get; set; }
+        public string UserName { get; set; }
+        public string EMail { get; set; }
     }
 
     public class OrganizationGroupsUsersView : IEventHandler, IECQRSService

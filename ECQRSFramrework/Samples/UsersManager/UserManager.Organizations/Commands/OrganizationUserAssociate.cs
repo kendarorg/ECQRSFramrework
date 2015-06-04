@@ -32,10 +32,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UserManager.Commons.Applications
+namespace UserManager.Organizations.Commands
 {
-    public class AllUsersApplicationDelete : Command
+    public class OrganizationUserAssociate:Command
     {
-        public Guid ApplicationId { get; set; }
+        public Guid OrganizationId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

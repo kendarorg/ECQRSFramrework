@@ -64,7 +64,7 @@ namespace UserManager.Commons.Groups
 
             if (message.OrganizationId != Guid.Empty)
             {
-                _sender.Send(new OrganizationAssociateUser
+                _sender.Send(new OrganizationUserAssociate
                 {
                     UserId = message.UserId,
                     OrganizationId = message.OrganizationId
@@ -79,12 +79,11 @@ namespace UserManager.Commons.Groups
             foreach (var role in allInvolvedOrganizations)
             {
                 //For the organization
-                _sender.Send(new OrganizationDeassociateUser
+                _sender.Send(new OrganizationUserDeassociate
                 {
                     CorrelationId = message.CorrelationId,
                     OrganizationId = role.OrganizationId,
-                    UserId = role.UserId,
-                    UserAssociationId = role.Id
+                    UserId = role.UserId
                 });
             }
 
@@ -104,8 +103,7 @@ namespace UserManager.Commons.Groups
                 CorrelationId = message.CorrelationId,
                 UserId = message.UserId,
                 GroupId = message.GroupId,
-                 OrganizationId = message.OrganizationId,
-                 Id =message.Id
+                 OrganizationId = message.OrganizationId
             });
         }
 

@@ -56,14 +56,6 @@ namespace UserManager.Core.Organizations
             _repository.Save(item, -1);
         }
 
-        public void Handle(OrganizationDelete message)
-        {
-            var item = _repository.GetById(message.OrganizationId);
-            item.SetLastCommand(message);
-            item.Delete();
-            _repository.Save(item, -1);
-        }
-
         public void Handle(OrganizationModify message)
         {
             var item = _repository.GetById(message.OrganizationId);
@@ -72,12 +64,20 @@ namespace UserManager.Core.Organizations
                 message.Name);
             _repository.Save(item, -1);
         }
+
+        public void Handle(OrganizationDelete message)
+        {
+            var item = _repository.GetById(message.OrganizationId);
+            item.SetLastCommand(message);
+            item.Delete();
+            _repository.Save(item, -1);
+        }
         
         public void Handle(OrganizationRoleAdd message)
         {
             var item = _repository.GetById(message.OrganizationId);
             item.SetLastCommand(message);
-            item.AddRole(message.ApplicationId, message.RoleId,message.ApplicationName,message.RoleCode);
+            item.AddRole(message.ApplicationId, message.RoleId);
             _repository.Save(item, -1);
         }
 
@@ -122,7 +122,7 @@ namespace UserManager.Core.Organizations
         {
             var item = _repository.GetById(message.OrganizationId);
             item.SetLastCommand(message);
-            item.AddRoleGroup(message.ApplicationId, message.GroupRoleId,message.GroupId,message.RoleId, message.Code);
+            item.AddRoleGroup(message.ApplicationId, message.GroupId,message.RoleId);
             _repository.Save(item, -1);
         }
 
@@ -130,23 +130,23 @@ namespace UserManager.Core.Organizations
         {
             var item = _repository.GetById(message.OrganizationId);
             item.SetLastCommand(message);
-            item.DeleteRoleGroup(message.GroupRoleId, message.GroupId, message.RoleId);
+            item.DeleteRoleGroup( message.GroupId, message.RoleId);
             _repository.Save(item, -1);
         }
 
-        public void Handle(OrganizationAssociateUser message)
+        public void Handle(OrganizationUserAssociate message)
         {
             var item = _repository.GetById(message.OrganizationId);
             item.SetLastCommand(message);
-            item.AssociateUser(message.UserId);
+            item.UserAssociate(message.UserId);
             _repository.Save(item, -1);
         }
 
-        public void Handle(OrganizationDeassociateUser message)
+        public void Handle(OrganizationUserDeassociate message)
         {
             var item = _repository.GetById(message.OrganizationId);
             item.SetLastCommand(message);
-            item.DeassociateUser(message.UserId);
+            item.UserDeassociate(message.UserId);
             _repository.Save(item, -1);
         }
     }

@@ -25,17 +25,18 @@
 // ===========================================================
 
 
+using ECQRS.Commons.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UserManager.Core.Organizations.Aggregate
+namespace UserManager.Organizations.Commands
 {
-    public class Role
+    public class OrganizationUserDeassociate:Command
     {
-        public Guid Id { get; set; }
-        public Guid ApplicationId { get; set; }
+        public Guid OrganizationId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

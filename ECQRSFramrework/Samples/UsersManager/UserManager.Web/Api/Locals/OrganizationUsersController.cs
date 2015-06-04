@@ -93,9 +93,8 @@ namespace UserManager.Api
         public void Delete(Guid organizationId, Guid userId)
         {
             var item = _orgUsers.Where(u => u.OrganizationId == organizationId && u.UserId == userId).ToList().FirstOrDefault();
-            _bus.Send(new OrganizationDeassociateUser
+            _bus.Send(new OrganizationUserDeassociate
             {
-                UserAssociationId = item.Id,
                 UserId = userId,
                 OrganizationId = organizationId
             });

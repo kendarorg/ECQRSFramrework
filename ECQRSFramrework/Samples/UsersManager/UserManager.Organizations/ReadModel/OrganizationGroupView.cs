@@ -40,44 +40,20 @@ namespace UserManager.Core.Organizations.ReadModel
 {
     public class OrganizationGroupItem : IEntity
     {
-        public OrganizationGroupItem()
-        {
-            Roles = string.Empty;
-        }
         [AutoGen(false)]
         public Guid Id { get; set; }
         public Guid OrganizationId { get; set; }
-        public string OrganizationName { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
-        public string Roles { get; set; }
-
-        internal void AddRole(Guid roleId)
-        {
-            var deserializedRoles = JsonConvert.DeserializeObject<List<Guid>>(Roles) ?? new List<Guid>();
-            if (deserializedRoles.Contains(roleId)) return;
-            deserializedRoles.Add(roleId);
-            Roles = JsonConvert.SerializeObject(deserializedRoles);
-        }
-
-        internal void DeleteRole(Guid roleId)
-        {
-            var deserializedRoles = JsonConvert.DeserializeObject<List<Guid>>(Roles) ?? new List<Guid>();
-            if (!deserializedRoles.Contains(roleId)) return;
-            deserializedRoles = deserializedRoles.Where(r => r != roleId).ToList();
-            Roles = JsonConvert.SerializeObject(deserializedRoles);
-        }
     }
 
     public class OrganizationGroupsView : IEventHandler, IECQRSService
     {
         private readonly IRepository<OrganizationGroupItem> _repository;
-        private readonly IRepository<OrganizationGroupRoleItem> _groupRoles;
 
-        public OrganizationGroupsView(IRepository<OrganizationGroupItem> repository, IRepository<OrganizationGroupRoleItem> groupRoles)
+        public OrganizationGroupsView(IRepository<OrganizationGroupItem> repository)
         {
             _repository = repository;
-            _groupRoles = groupRoles;
         }
 
         public void Handle(OrganizationGroupCreated message)
@@ -87,8 +63,7 @@ namespace UserManager.Core.Organizations.ReadModel
                 OrganizationId = message.OrganizationId,
                 Id = message.GroupId,
                 Code = message.Code,
-                Description = message.Description,
-                OrganizationName = message.OrganizationName
+                Description = message.Description
             });
         }
 
@@ -117,34 +92,5 @@ namespace UserManager.Core.Organizations.ReadModel
         {
             _repository.Delete(message.GroupId);
         }
-
-
-
-        public void Handle(OrganizationGroupRoleAdded message)
-        {
-            var group = _repository.Get(message.GroupId);
-            group.AddRole(message.RoleId);
-            _repository.Update(group);
-        }
-
-        public void Handle(OrganizationGroupRoleDeleted message)
-        {
-            var group = _repository.Get(message.GroupId);
-            group.DeleteRole(message.RoleId);
-            _repository.Update(group);
-        }
-
-        public void Handle(OrganizationRoleDeleted message)
-        {
-            var roleId = message.RoleId.ToString();
-            var groups = _repository.Where(g => g.Roles.Contains(roleId)).ToList();
-            foreach (var group in groups)
-            {
-                group.DeleteRole(message.RoleId);
-                _repository.Update(group);
-            }
-        }
-
-
     }
 }

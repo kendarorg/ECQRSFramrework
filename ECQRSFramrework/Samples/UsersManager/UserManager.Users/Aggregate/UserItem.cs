@@ -39,6 +39,8 @@ namespace UserManager.Core.Users
 {
     public class UserItem : AggregateRoot
     {
+        #region Common
+
         private User _user;
 
         public override Guid Id
@@ -53,6 +55,10 @@ namespace UserManager.Core.Users
                 throw new AggregateNotFoundException();
             }
         }
+
+        #endregion Common
+
+        #region Constructors
 
         public UserItem()
         {
@@ -75,8 +81,6 @@ namespace UserManager.Core.Users
             });
         }
 
-        #region CRUD
-
         public void Apply(UserCreated e)
         {
             _user.Id = e.UserId;
@@ -87,20 +91,9 @@ namespace UserManager.Core.Users
             _user.HashedPassword = e.HashedPassword;
         }
 
-        public void Delete()
-        {
-            CheckDeleted();
-            ApplyChange(new UserDeleted
-            {
-                CorrelationId = LastCommand,
-                UserId = Id
-            });
-        }
+        #endregion Constructors
 
-        public void Apply(UserDeleted e)
-        {
-            _user.IsDeleted = true;
-        }
+        #region CRUD
 
         public void Modify(string email, string firstName, string lastName, string userName)
         {
@@ -124,7 +117,21 @@ namespace UserManager.Core.Users
             _user.LastName = e.LastName;
         }
 
-        #endregion CRUD
+        public void Delete()
+        {
+            CheckDeleted();
+            ApplyChange(new UserDeleted
+            {
+                CorrelationId = LastCommand,
+                UserId = Id
+            });
+        }
 
+        public void Apply(UserDeleted e)
+        {
+            _user.IsDeleted = true;
+        }
+
+        #endregion CRUD
     }
 }

@@ -55,7 +55,6 @@ namespace UserManager.Model.Organizations
             {
                 Id = orgRole == null ? Guid.NewGuid() : orgRole.Id,
                 ApplicationId = item.ApplicationId,
-                ApplicationName = item.ApplicationName,
                 Assigned = orgRole != null,
                 RoleId= item.Id,
                 Code = item.Code,

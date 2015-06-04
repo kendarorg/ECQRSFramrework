@@ -36,8 +36,8 @@ namespace UserManager.Core.Organizations.Events
 {
     public class OrganizationGroupModified : Event
     {
-        public Guid GroupId { get; set; }
         public Guid OrganizationId { get; set; }
+        public Guid GroupId { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
     }

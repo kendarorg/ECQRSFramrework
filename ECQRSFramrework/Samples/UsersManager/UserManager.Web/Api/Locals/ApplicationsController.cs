@@ -43,17 +43,17 @@ namespace UserManager.Api
 {
     public class ApplicationsController : ApiController
     {
-        private IRepository<ApplicationDetailItem> _list;
+        private IRepository<ApplicationListItem> _list;
         private ICommandSender _bus;
 
-        public ApplicationsController( IRepository<ApplicationDetailItem> list, ICommandSender bus)
+        public ApplicationsController(IRepository<ApplicationListItem> list, ICommandSender bus)
         {
             _list = list;
             _bus = bus;
         }
 
         // GET: api/Applications
-        public IEnumerable<ApplicationDetailItem> Get(string range = null, string filter = null)
+        public IEnumerable<ApplicationListItem> Get(string range = null, string filter = null)
         {
             var parsedRange = AngularApiUtils.ParseRange(range);
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
@@ -66,7 +66,7 @@ namespace UserManager.Api
         }
 
         // GET: api/Applications/5
-        public ApplicationDetailItem Get(Guid id)
+        public ApplicationListItem Get(Guid id)
         {
             var res = _list.Get(id);
             if (res != null) return res;

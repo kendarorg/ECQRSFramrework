@@ -39,6 +39,8 @@ namespace UserManager.Core.Organizations
 {
     public class OrganizationItem : AggregateRoot
     {
+        #region Common
+
         private Organization _organization;
 
         public override Guid Id
@@ -53,6 +55,10 @@ namespace UserManager.Core.Organizations
                 throw new AggregateNotFoundException();
             }
         }
+
+        #endregion Common
+
+        #region Constructors
 
         public OrganizationItem()
         {
@@ -71,27 +77,14 @@ namespace UserManager.Core.Organizations
             });
         }
 
+        #endregion Constructors
+
         #region CRUD
 
         public void Apply(OrganizationCreated e)
         {
             _organization.Id = e.OrganizationId;
             _organization.Name = e.Name;
-        }
-
-        public void Delete()
-        {
-            CheckDeleted();
-            ApplyChange(new OrganizationDeleted
-            {
-                CorrelationId = LastCommand,
-                OrganizationId = Id
-            });
-        }
-
-        public void Apply(OrganizationDeleted e)
-        {
-            _organization.IsDeleted = true;
         }
 
         public void Modify(string name)
@@ -110,14 +103,28 @@ namespace UserManager.Core.Organizations
             _organization.Name = e.Name;
         }
 
+        public void Delete()
+        {
+            CheckDeleted();
+            ApplyChange(new OrganizationDeleted
+            {
+                CorrelationId = LastCommand,
+                OrganizationId = Id
+            });
+        }
+
+        public void Apply(OrganizationDeleted e)
+        {
+            _organization.IsDeleted = true;
+        }
+
         #endregion CRUD
 
         #region Roles
 
-        public void AddRole(Guid applicationId, Guid roleId, string applicationName, string roleCode)
+        public void AddRole(Guid applicationId, Guid roleId)
         {
             CheckDeleted();
-            Check(_organization.HasRole(roleId), new AggregateException("Duplicated role " + roleId));
             ApplyChange(new OrganizationRoleAdded
             {
                 ApplicationId = applicationId,
@@ -127,15 +134,9 @@ namespace UserManager.Core.Organizations
             });
         }
 
-        public void Apply(OrganizationRoleAdded e)
-        {
-            _organization.AddRole(e.ApplicationId, e.RoleId);
-        }
-
         public void DeleteRole(Guid applicationId, Guid roleId)
         {
             CheckDeleted();
-            if(!_organization.HasRole(roleId)) return;
             ApplyChange(new OrganizationRoleDeleted
             {
                 CorrelationId = LastCommand,
@@ -145,28 +146,21 @@ namespace UserManager.Core.Organizations
             });
         }
 
-        public void Apply(OrganizationRoleDeleted e)
-        {
-            _organization.DeleteRole(e.ApplicationId, e.RoleId);
-        }
-
         #endregion Roles
 
         #region Group
 
-
-        public void AddGroup(Guid groupId, string code, string description)
+        public void AddGroup(Guid groupId,string code,string description)
         {
             CheckDeleted();
-            Check(_organization.HasGroup(groupId, code), new AggregateException("Duplicated group " + code));
+            Check(_organization.HasGroup(groupId), new AggregateException("Duplicated group " + groupId));
             ApplyChange(new OrganizationGroupCreated
             {
                 CorrelationId = LastCommand,
                 OrganizationId = Id,
                 GroupId = groupId,
                 Code = code,
-                Description = description,
-                OrganizationName = _organization.Name
+                Description = description
             });
         }
 
@@ -179,7 +173,7 @@ namespace UserManager.Core.Organizations
         public void ModifyGroup(Guid groupId, string code, string description)
         {
             CheckDeleted();
-            Check(!_organization.HasGroup(groupId, code), new AggregateException("Missing group " + code));
+            Check(!_organization.HasGroup(groupId), new AggregateException("Missing group " + groupId));
             ApplyChange(new OrganizationGroupModified
             {
                 CorrelationId = LastCommand,
@@ -216,52 +210,38 @@ namespace UserManager.Core.Organizations
 
         #region GroupRoles
 
-        public void AddRoleGroup(Guid applicationId,Guid guid, Guid groupId, Guid roleId, string code)
+        public void AddRoleGroup(Guid applicationId, Guid roleId, Guid groupId)
         {
             CheckDeleted();
-            Check(!_organization.HasGroup(groupId, code), new AggregateException("Missing group " + code));
-            Check(!_organization.HasRole(roleId), new AggregateException("Missing role " + roleId));
-            Check(_organization.HasGroupRole(groupId, roleId), new AggregateException("Role " + roleId + " already in group " + groupId));
+            Check(!_organization.HasGroup(groupId), new AggregateException("Missing group " + groupId));
             ApplyChange(new OrganizationGroupRoleAdded
             {
                 ApplicationId = applicationId,
                 CorrelationId = LastCommand,
-                GroupRoleId = guid,
                 GroupId = groupId,
                 OrganizationId = Id,
                 RoleId = roleId
             });
         }
 
-        public void Apply(OrganizationGroupRoleAdded e)
-        {
-            _organization.AddRoleGroup(e.GroupId, e.RoleId);
-        }
-
-        public void DeleteRoleGroup(Guid guid, Guid groupId, Guid roleId)
+        public void DeleteRoleGroup(Guid groupId, Guid roleId)
         {
             CheckDeleted();
             Check(!_organization.HasGroup(groupId), new AggregateException("Missing group " + groupId));
-            Check(!_organization.HasRole(roleId), new AggregateException("Missing role " + roleId));
-            Check(!_organization.HasGroupRole(groupId, roleId), new AggregateException("Missing role " + roleId + " in group " + groupId));
             ApplyChange(new OrganizationGroupRoleDeleted
             {
                 CorrelationId = LastCommand,
-                GroupRoleId = guid,
                 OrganizationId = Id,
                 GroupId = groupId,
                 RoleId = roleId
             });
-        }
-
-        public void Apply(OrganizationGroupRoleDeleted e)
-        {
-            _organization.DeleteRoleGroup(e.GroupId, e.RoleId);
         }
 
         #endregion GroupRoles
 
-        public void AssociateUser(Guid userId)
+        #region OrganizationUsers
+
+        public void UserAssociate(Guid userId)
         {
             CheckDeleted();
             ApplyChange(new OrganizationUserAssociated
@@ -271,7 +251,7 @@ namespace UserManager.Core.Organizations
             });
         }
 
-        public void DeassociateUser(Guid userId)
+        public void UserDeassociate(Guid userId)
         {
             CheckDeleted();
             ApplyChange(new OrganizationUserDeassociated
@@ -280,5 +260,31 @@ namespace UserManager.Core.Organizations
                 UserId = userId
             });
         }
+
+        #endregion OrganizationUsers
+
+        #region OrganizationGroupUser
+
+        public void GroupUserAssociate(Guid userId, Guid groupId)
+        {
+            CheckDeleted();
+            ApplyChange(new OrganizationUserAssociated
+            {
+                OrganizationId = Id,
+                UserId = userId
+            });
+        }
+
+        public void GroupUserDeassociate(Guid userId, Guid groupId)
+        {
+            CheckDeleted();
+            ApplyChange(new OrganizationUserDeassociated
+            {
+                OrganizationId = Id,
+                UserId = userId
+            });
+        }
+
+        #endregion OrganizationGroupUser
     }
 }

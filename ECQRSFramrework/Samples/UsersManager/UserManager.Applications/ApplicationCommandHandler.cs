@@ -55,20 +55,20 @@ namespace UserManager.Core.Applications
             _repository.Save(item, -1);
         }
 
-        public void Handle(ApplicationDelete message)
-        {
-            var item = _repository.GetById(message.ApplicationId);
-            item.SetLastCommand(message);
-            item.Delete();
-            _repository.Save(item, -1);
-        }
-
         public void Handle(ApplicationModify message)
         {
             var item = _repository.GetById(message.ApplicationId);
             item.SetLastCommand(message);
             item.Modify(
                 message.Name);
+            _repository.Save(item, -1);
+        }
+
+        public void Handle(ApplicationDelete message)
+        {
+            var item = _repository.GetById(message.ApplicationId);
+            item.SetLastCommand(message);
+            item.Delete();
             _repository.Save(item, -1);
         }
         
@@ -121,7 +121,7 @@ namespace UserManager.Core.Applications
         {
             var item = _repository.GetById(message.ApplicationId);
             item.SetLastCommand(message);
-            item.AddPermissionRole(message.RolePermissionId,message.RoleId,message.PermissionId, message.Code);
+            item.AddPermissionRole(message.RoleId,message.PermissionId);
             _repository.Save(item, -1);
         }
 
@@ -129,7 +129,7 @@ namespace UserManager.Core.Applications
         {
             var item = _repository.GetById(message.ApplicationId);
             item.SetLastCommand(message);
-            item.DeletePermissionRole(message.RolePermissionId,message.RoleId,message.PermissionId);
+            item.DeletePermissionRole(message.RoleId,message.PermissionId);
             _repository.Save(item, -1);
         }
     }

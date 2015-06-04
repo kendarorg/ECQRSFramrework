@@ -42,7 +42,6 @@ namespace UserManager.Core.Applications.ReadModel
         [AutoGen(false)]
         public Guid Id { get; set; }
         public Guid ApplicationId { get; set; }
-        public string ApplicationName { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
     }
@@ -63,8 +62,7 @@ namespace UserManager.Core.Applications.ReadModel
                 ApplicationId = message.ApplicationId,
                 Id = message.RoleId,
                 Code = message.Code,
-                Description = message.Description,
-                ApplicationName = message.ApplicationName
+                Description = message.Description
             });
         }
 
@@ -76,22 +74,14 @@ namespace UserManager.Core.Applications.ReadModel
             _repository.Update(item);
         }
 
-        public void Handle(ApplicationModified message)
+        public void Handle(ApplicationRoleDeleted message)
         {
-            _repository.UpdateWhere(new
-            {
-                ApplicationName = message.Name
-            },x=>x.ApplicationId==message.ApplicationId);
+            _repository.Delete(message.RoleId);
         }
 
         public void Handle(ApplicationDeleted message)
         {
             _repository.DeleteWhere(x => x.ApplicationId == message.ApplicationId);
-        }
-
-        public void Handle(ApplicationRoleDeleted message)
-        {
-            _repository.Delete(message.RoleId);
         }
     }
 }

@@ -46,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aggregate\User.cs" />
-    <Compile Include="Commands\AllUsersApplicationDelete.cs" />
     <Compile Include="Commands\UserCreate.cs" />
     <Compile Include="Commands\UserDelete.cs" />
     <Compile Include="Commands\UserModify.cs" />

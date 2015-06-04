@@ -57,7 +57,6 @@ namespace UserManager.Model.Organizations
             {
                 RoleCode = par.Code,
                 ApplicationId = par.ApplicationId,
-                ApplicationName = par.ApplicationName,
                 OrganizationId = organizationId,
                 Id = selectedItem == null ? Guid.NewGuid() : selectedItem.Id,
                 GroupId = groupId,

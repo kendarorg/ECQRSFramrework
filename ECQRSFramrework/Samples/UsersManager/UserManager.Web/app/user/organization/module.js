@@ -29,7 +29,7 @@ users.service('userOrganizationDataService', [
             return result;
         };
         this.add = function (item, scope) { return '/api/UserOrganizations/' + scope.item.Id; }
-        this.delete = function (item, scope) { return '/api/UserOrganizations/' + scope.item.Id+'/' +item.OrganizationId+'/'+ item.Id + ''; }
+        this.delete = function (item, scope) { return '/api/UserOrganizations/' + scope.item.Id+'/' +item.OrganizationId; }
     }
 ]);
 

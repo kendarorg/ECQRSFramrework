@@ -36,11 +36,10 @@ namespace UserManager.Core.Organizations.Commands
 {
     public class OrganizationGroupRoleAdd : Command
     {
-        public Guid GroupId { get; set; }
         public Guid OrganizationId { get; set; }
+        public Guid GroupId { get; set; }
+        public Guid GroupRoleId { get; set; }
         public Guid ApplicationId { get; set; }
         public Guid RoleId { get; set; }
-        public Guid GroupRoleId { get; set; }
-        public String Code { get; set; }
     }
 }

@@ -59,14 +59,6 @@ namespace UserManager.Core.Users
             _repository.Save(item, -1);
         }
 
-        public void Handle(UserDelete message)
-        {
-            var item = _repository.GetById(message.UserId);
-            item.SetLastCommand(message);
-            item.Delete();
-            _repository.Save(item, -1);
-        }
-
         public void Handle(UserModify message)
         {
             var item = _repository.GetById(message.UserId);
@@ -76,6 +68,14 @@ namespace UserManager.Core.Users
                 message.FirstName,
                 message.LastName,
                 message.UserName);
+            _repository.Save(item, -1);
+        }
+
+        public void Handle(UserDelete message)
+        {
+            var item = _repository.GetById(message.UserId);
+            item.SetLastCommand(message);
+            item.Delete();
             _repository.Save(item, -1);
         }
 

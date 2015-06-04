@@ -37,46 +37,18 @@ namespace UserManager.Core.Organizations.Aggregate
     {
         public Organization()
         {
-            Roles = new Dictionary<Guid, Role>();
             Groups = new Dictionary<Guid, Group>();
         }
 
         public bool IsDeleted { get; set; }
         public Guid Id { get; set; }
         public String Name { get; set; }
-        public Dictionary<Guid, Role> Roles { get; set; }
         public Dictionary<Guid, Group> Groups { get; set; }
 
-        internal bool HasRole(Guid roleId)
-        {
-            return Roles.ContainsKey(roleId);
-        }
 
-        internal void AddRole(Guid applicationId,Guid roleId)
+        internal bool HasGroup(Guid groupId)
         {
-            Roles.Add(roleId, new Role
-            {
-                ApplicationId = applicationId,
-                Id = roleId
-            });
-        }
-
-        internal void DeleteRole(Guid applicationId,Guid roleId)
-        {
-            Roles.Remove(roleId);
-            foreach (var group in Groups.Values)
-            {
-                if (group.Roles.Contains(roleId))
-                {
-                    group.Roles.Remove(roleId);
-                }
-            }
-        }
-
-        internal bool HasGroup(Guid groupId, string code = null)
-        {
-            return Groups.ContainsKey(groupId) ||
-                (!string.IsNullOrWhiteSpace(code) && Groups.Values.Any(p => p.Code == code));
+            return Groups.ContainsKey(groupId);
         }
 
         internal void AddGroup(Guid groupId, string code, string description)
@@ -100,19 +72,5 @@ namespace UserManager.Core.Organizations.Aggregate
             Groups.Remove(groupId);
         }
 
-        internal bool HasGroupRole(Guid groupId, Guid roleId)
-        {
-            return Groups[groupId].Roles.Contains(roleId);
-        }
-
-        internal void AddRoleGroup(Guid groupId, Guid roleId)
-        {
-            Groups[groupId].Roles.Add(roleId);
-        }
-
-        internal void DeleteRoleGroup(Guid groupId, Guid roleId)
-        {
-            Groups[groupId].Roles.Remove(roleId);
-        }
     }
 }

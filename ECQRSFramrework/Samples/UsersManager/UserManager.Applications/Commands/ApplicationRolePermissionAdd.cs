@@ -40,6 +40,5 @@ namespace UserManager.Core.Applications.Commands
         public Guid ApplicationId { get; set; }
         public Guid PermissionId { get; set; }
         public Guid RolePermissionId { get; set; }
-        public String Code { get; set; }
     }
 }

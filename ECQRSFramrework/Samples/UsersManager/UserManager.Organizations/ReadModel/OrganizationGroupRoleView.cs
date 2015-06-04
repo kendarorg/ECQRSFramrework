@@ -43,8 +43,8 @@ namespace UserManager.Core.Organizations.ReadModel
         [AutoGen(false)]
         public Guid Id { get; set; }
         public Guid OrganizationId { get; set; }
-        public Guid ApplicationId { get; set; }
         public Guid GroupId { get; set; }
+        public Guid ApplicationId { get; set; }
         public Guid RoleId { get; set; }
     }
 
@@ -65,13 +65,17 @@ namespace UserManager.Core.Organizations.ReadModel
                 OrganizationId = message.OrganizationId,
                 RoleId = message.RoleId,
                 GroupId = message.GroupId,
-                Id = message.GroupRoleId
+                Id = Guid.NewGuid()
             });
         }
 
         public void Handle(OrganizationGroupRoleDeleted message)
         {
-            _repository.Delete(message.GroupRoleId);
+            _repository.DeleteWhere(r=>
+                r.ApplicationId == message.ApplicationId 
+                && r.OrganizationId == message.OrganizationId
+                && r.GroupId == message.GroupId
+                && r.RoleId == message.RoleId);
         }
 
         public void Handle(OrganizationRoleDeleted message)

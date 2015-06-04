@@ -1,0 +1,32 @@
+﻿Foreach, select all the Aggregates where the thing is used. 
+On views marked with +
+Specific on Aggregates
+	DeleteUser
+		Organization
+			OrganizationUserView +
+			OrganizationGroupsUsersView 
+	DeleteOrganization
+		User
+			*UserOrganizationsView +
+			*UserORganizationGroupsView
+	DeleteApplication
+		Organization
+			OrganizationRoleView +
+			OrganizationGroupRoleView
+	DeleteRole
+		Organization
+			OrganizationRoleView +
+			OrganizationGroupRoleView
+
+Here a direct update is applied on the view! These are only for "cosmetic purposes"
+Commons
+	ModifyUser
+		Organization
+			OrganizationUserView
+			OrganizationGroupsUsersView
+	ModifyOrganization
+		User
+			*UserOrganizationsView 
+			*UserORganizationGroupsView
+		
+

@@ -71,7 +71,6 @@
     <Compile Include="Events\ApplicationRolePermissionDeleted.cs" />
     <Compile Include="Events\ApplicationRolePermssionAdded.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReadModel\ApplicationDetailView.cs" />
     <Compile Include="ReadModel\ApplicationListView.cs" />
     <Compile Include="ReadModel\ApplicationPermissionsView.cs" />
     <Compile Include="ReadModel\ApplicationRolesPermissionsView.cs" />

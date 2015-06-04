@@ -66,16 +66,16 @@ namespace UserManager.Core.Applications.ReadModel
             });
         }
 
-        public void Handle(ApplicationDeleted message)
-        {
-            
-            _repository.DeleteWhere(x => x.ApplicationId == message.ApplicationId);
-            
-        }
-
         public void Handle(ApplicationPermissionDeleted message)
         {
             _repository.Delete(message.PermissionId);
+        }
+
+        public void Handle(ApplicationDeleted message)
+        {
+
+            _repository.DeleteWhere(x => x.ApplicationId == message.ApplicationId);
+
         }
     }
 }

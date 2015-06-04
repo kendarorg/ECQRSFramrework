@@ -37,7 +37,6 @@ namespace UserManager.Organizations.Events
     public class OrganizationUserDeassociated:Event
     {
         public Guid OrganizationId { get; set; }
-
         public Guid UserId { get; set; }
     }
 }

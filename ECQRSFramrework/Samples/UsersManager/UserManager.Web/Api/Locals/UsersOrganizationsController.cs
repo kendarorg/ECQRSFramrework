@@ -78,7 +78,7 @@ namespace UserManager.Api
         [Route("api/UserOrganizations/{userId}")]
         public void Post(Guid userId, [FromBody]UserOrganizationModel value)
         {
-            _bus.Send(new OrganizationAssociateUser
+            _bus.Send(new OrganizationUserAssociate
             {
                 UserId = value.UserId,
                 OrganizationId = value.OrganizationId
@@ -88,11 +88,10 @@ namespace UserManager.Api
         // DELETE: api/Users/5
         [HttpDelete]
         [Route("api/UserOrganizations/{userId}/{organizationId}/{id}")]
-        public void Delete(Guid userId, Guid organizationId, Guid id)
+        public void Delete(Guid userId, Guid organizationId)
         {
-            _bus.Send(new OrganizationDeassociateUser
+            _bus.Send(new OrganizationUserDeassociate
             {
-                UserAssociationId = id,
                 UserId = userId,
                 OrganizationId = organizationId
             });

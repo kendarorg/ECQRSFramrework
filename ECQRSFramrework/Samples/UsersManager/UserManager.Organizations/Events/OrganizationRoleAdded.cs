@@ -36,9 +36,9 @@ namespace UserManager.Core.Organizations.Events
 {
     public class OrganizationRoleAdded : Event
     {
-        public Guid RoleId { get; set; }
         public Guid OrganizationId { get; set; }
         public Guid ApplicationId { get; set; }
+        public Guid RoleId { get; set; }
     }
 
     

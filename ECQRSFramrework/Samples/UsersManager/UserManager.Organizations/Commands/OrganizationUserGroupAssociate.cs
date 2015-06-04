@@ -10,11 +10,7 @@ namespace UserManager.Organizations.Commands
     public class OrganizationUserGroupAssociate : Command
     {
         public Guid OrganizationId { get; set; }
-
         public Guid GroupId { get; set; }
-
         public Guid UserId { get; set; }
-
-        public Guid Id { get; set; }
     }
 }

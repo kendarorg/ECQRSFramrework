@@ -75,10 +75,9 @@ namespace UserManager.Core.Applications.Aggregate
             }
         }
 
-        internal bool HasRole(Guid roleId, string code = null)
+        internal bool HasRole(Guid roleId)
         {
-            return Roles.ContainsKey(roleId) ||
-                (!string.IsNullOrWhiteSpace(code) && Roles.Values.Any(p => p.Code == code));
+            return Roles.ContainsKey(roleId);
         }
 
         internal void AddRole(Guid roleId, string code, string description)

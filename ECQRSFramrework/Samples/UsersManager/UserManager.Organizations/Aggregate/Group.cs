@@ -35,13 +35,8 @@ namespace UserManager.Core.Organizations.Aggregate
 {
     public class Group
     {
-        public Group()
-        {
-            Roles = new HashSet<Guid>();
-        }
         public Guid Id { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
-        public HashSet<Guid> Roles { get; set; }
     }
 }

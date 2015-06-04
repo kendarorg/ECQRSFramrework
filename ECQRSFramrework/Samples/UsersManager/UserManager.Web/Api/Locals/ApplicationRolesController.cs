@@ -162,7 +162,6 @@ namespace UserManager.Api
 
             _bus.Send(new ApplicationRolePermissionAdd
             {
-                Code = value.Code,
                 ApplicationId = applicationId.Value,
                 RoleId = roleId.Value,
                 PermissionId = value.PermissionId,

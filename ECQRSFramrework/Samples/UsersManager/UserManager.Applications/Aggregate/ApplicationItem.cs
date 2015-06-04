@@ -38,6 +38,8 @@ namespace UserManager.Core.Applications
 {
     public class ApplicationItem : AggregateRoot
     {
+        #region Common
+
         private Application _application;
 
         public override Guid Id
@@ -52,6 +54,10 @@ namespace UserManager.Core.Applications
                 throw new AggregateNotFoundException();
             }
         }
+
+        #endregion Common
+
+        #region Constructors
 
         public ApplicationItem()
         {
@@ -70,11 +76,29 @@ namespace UserManager.Core.Applications
             });
         }
 
+        #endregion Constructors
+
         #region CRUD
 
         public void Apply(ApplicationCreated e)
         {
             _application.Id = e.ApplicationId;
+            _application.Name = e.Name;
+        }
+        
+        public void Modify(string name)
+        {
+            CheckDeleted();
+            ApplyChange(new ApplicationModified
+            {
+                CorrelationId = LastCommand,
+                ApplicationId = Id,
+                Name = name
+            });
+        }
+
+        public void Apply(ApplicationModified e)
+        {
             _application.Name = e.Name;
         }
 
@@ -91,22 +115,6 @@ namespace UserManager.Core.Applications
         public void Apply(ApplicationDeleted e)
         {
             _application.IsDeleted = true;
-        }
-
-        public void Modify(string name)
-        {
-            CheckDeleted();
-            ApplyChange(new ApplicationModified
-            {
-                CorrelationId = LastCommand,
-                ApplicationId = Id,
-                Name = name
-            });
-        }
-
-        public void Apply(ApplicationModified e)
-        {
-            _application.Name = e.Name;
         }
 
         #endregion CRUD
@@ -153,11 +161,10 @@ namespace UserManager.Core.Applications
 
         #region Role
 
-
         public void AddRole(Guid roleId, string code, string description)
         {
             CheckDeleted();
-            Check(_application.HasRole(roleId, code), new AggregateException("Duplicated role " + code));
+            Check(_application.HasRole(roleId), new AggregateException("Duplicated role " + code));
             ApplyChange(new ApplicationRoleCreated
             {
                 CorrelationId = LastCommand,
@@ -174,11 +181,10 @@ namespace UserManager.Core.Applications
             _application.AddRole(e.RoleId, e.Code, e.Description);
         }
 
-
         public void ModifyRole(Guid roleId, string code, string description)
         {
             CheckDeleted();
-            Check(!_application.HasRole(roleId, code), new AggregateException("Missing role " + code));
+            Check(!_application.HasRole(roleId), new AggregateException("Missing role " + code));
             ApplyChange(new ApplicationRoleModified
             {
                 CorrelationId = LastCommand,
@@ -215,20 +221,18 @@ namespace UserManager.Core.Applications
 
         #region RolePermissions
 
-        public void AddPermissionRole(Guid guid, Guid roleId, Guid permissionId, string code)
+        public void AddPermissionRole(Guid roleId, Guid permissionId)
         {
             CheckDeleted();
-            Check(!_application.HasRole(roleId, code), new AggregateException("Missing role " + code));
+            Check(!_application.HasRole(roleId), new AggregateException("Missing role " + roleId));
             Check(!_application.HasPermission(permissionId), new AggregateException("Missing permission " + permissionId));
             Check(_application.HasRolePermission(roleId, permissionId), new AggregateException("Permission " + permissionId + " already in role " + roleId));
             ApplyChange(new ApplicationRolePermssionAdded
             {
                 CorrelationId = LastCommand,
-                RolePermissionId = guid,
                 RoleId = roleId,
                 ApplicationId = Id,
-                PermissionId = permissionId,
-                Code = code
+                PermissionId = permissionId
             });
         }
 
@@ -237,7 +241,7 @@ namespace UserManager.Core.Applications
             _application.AddPermissionRole(e.RoleId, e.PermissionId);
         }
 
-        public void DeletePermissionRole(Guid guid, Guid roleId, Guid permissionId)
+        public void DeletePermissionRole( Guid roleId, Guid permissionId)
         {
             CheckDeleted();
             Check(!_application.HasRole(roleId), new AggregateException("Missing role " + roleId));
@@ -246,7 +250,6 @@ namespace UserManager.Core.Applications
             ApplyChange(new ApplicationRolePermissionDeleted
             {
                 CorrelationId = LastCommand,
-                RolePermissionId = guid,
                 ApplicationId = Id,
                 RoleId = roleId,
                 PermissionId = permissionId
@@ -259,7 +262,5 @@ namespace UserManager.Core.Applications
         }
 
         #endregion RolePermissions
-
-
     }
 }

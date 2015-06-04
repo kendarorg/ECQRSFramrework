@@ -111,13 +111,11 @@ namespace UserManager
                 RegisterRepository<UserListItem>(cn);
                 RegisterRepository<UserDetailItem>(cn);
 
-                RegisterRepository<ApplicationDetailItem>(cn);
                 RegisterRepository<ApplicationListItem>(cn);
                 RegisterRepository<ApplicationPermissionItem>(cn);
                 RegisterRepository<ApplicationRoleItem>(cn);
                 RegisterRepository<ApplicationRolePermissionItem>(cn);
 
-                RegisterRepository<OrganizationDetailItem>(cn);
                 RegisterRepository<OrganizationListItem>(cn);
                 RegisterRepository<OrganizationRoleItem>(cn);
                 RegisterRepository<OrganizationGroupItem > (cn);

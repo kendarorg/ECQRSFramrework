@@ -42,17 +42,17 @@ namespace UserManager.Api
 {
     public class OrganizationsController : ApiController
     {
-        private IRepository<OrganizationDetailItem> _list;
+        private IRepository<OrganizationListItem> _list;
         private ICommandSender _bus;
 
-        public OrganizationsController( IRepository<OrganizationDetailItem> list, ICommandSender bus)
+        public OrganizationsController(IRepository<OrganizationListItem> list, ICommandSender bus)
         {
             _list = list;
             _bus = bus;
         }
 
         // GET: api/Organizations
-        public IEnumerable<OrganizationDetailItem> Get(string range = null, string filter = null)
+        public IEnumerable<OrganizationListItem> Get(string range = null, string filter = null)
         {
             var parsedRange = AngularApiUtils.ParseRange(range);
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
@@ -65,7 +65,7 @@ namespace UserManager.Api
         }
 
         // GET: api/Organizations/5
-        public OrganizationDetailItem Get(Guid id)
+        public OrganizationListItem Get(Guid id)
         {
             var res = _list.Get(id);
             if (res != null) return res;

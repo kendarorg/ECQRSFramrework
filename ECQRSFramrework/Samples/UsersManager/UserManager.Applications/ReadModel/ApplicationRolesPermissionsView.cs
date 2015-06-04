@@ -44,7 +44,6 @@ namespace UserManager.Core.Applications.ReadModel
         public Guid ApplicationId { get; set; }
         public Guid RoleId { get; set; }
         public Guid PermissionId { get; set; }
-        public string Code { get; set; }
     }
 
     public class ApplicationRolesPermissionsView : IEventHandler, IECQRSService
@@ -63,9 +62,13 @@ namespace UserManager.Core.Applications.ReadModel
                 ApplicationId = message.ApplicationId,
                 PermissionId = message.PermissionId,
                 RoleId = message.RoleId,
-                Id = message.RolePermissionId,
-                Code = message.Code
+                Id = message.RolePermissionId
             });
+        }
+
+        public void Handle(ApplicationRolePermissionDeleted message)
+        {
+            _repository.Delete(message.RolePermissionId);
         }
 
         public void Handle(ApplicationPermissionDeleted message)
@@ -85,11 +88,6 @@ namespace UserManager.Core.Applications.ReadModel
         {
             _repository.DeleteWhere(
                 x => x.ApplicationId == message.ApplicationId);
-        }
-
-        public void Handle(ApplicationRolePermissionDeleted message)
-        {
-            _repository.Delete(message.RolePermissionId);
         }
     }
 }

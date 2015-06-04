@@ -40,6 +40,5 @@ namespace UserManager.Core.Applications.Events
         public Guid RoleId { get; set; }
         public Guid PermissionId { get; set; }
         public Guid RolePermissionId { get; set; }
-        public string Code { get; set; }
     }
 }

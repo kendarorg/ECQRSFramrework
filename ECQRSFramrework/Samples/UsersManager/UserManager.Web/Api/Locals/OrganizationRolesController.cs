@@ -89,8 +89,6 @@ namespace UserManager.Api
         {
             _bus.Send(new OrganizationRoleAdd
             {
-                ApplicationName = value.ApplicationName,
-                RoleCode = value.Code,
                 OrganizationId = organizationId,
                 ApplicationId = value.ApplicationId,
                 RoleId = value.RoleId

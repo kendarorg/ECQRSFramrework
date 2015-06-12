@@ -42,7 +42,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRSGui.SqlServer", "Sample
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diary.CQRS.Web.SqlServer", "Samples\RobertKanasz\Diary.CQRS.Web.SqlServer\Diary.CQRS.Web.SqlServer.csproj", "{E3AFC2FA-549A-4D0B-B8DA-FBACE4F160C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManager.Commons", "Samples\UsersManager\UserManager.Commons\UserManager.Commons.csproj", "{3C983F05-B3AC-46C0-80AE-627D63CBFB16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManager.Views", "Samples\UsersManager\UserManager.Commons\UserManager.Views.csproj", "{3C983F05-B3AC-46C0-80AE-627D63CBFB16}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECQRS.SqlServer.Bus", "ECQRS.SqlServer.Bus\ECQRS.SqlServer.Bus.csproj", "{C146060D-A5AB-4A99-AC13-36FC39A9287E}"
 EndProject

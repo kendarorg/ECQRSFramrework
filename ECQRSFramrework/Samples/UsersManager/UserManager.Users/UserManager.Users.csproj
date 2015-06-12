@@ -56,7 +56,6 @@
     <Compile Include="ReadModel\UsersDetailView.cs" />
     <Compile Include="ReadModel\UsersListView.cs" />
     <Compile Include="Services\HashService.cs" />
-    <Compile Include="Services\IHashService.cs" />
     <Compile Include="UserCommandHandler.cs" />
     <Compile Include="Aggregate\UserItem.cs" />
   </ItemGroup>
@@ -64,6 +63,10 @@
     <ProjectReference Include="..\..\..\ECQRS.Commons\ECQRS.Commons.csproj">
       <Project>{897c65fb-fc3e-493b-8214-4541ac481d70}</Project>
       <Name>ECQRS.Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UserManager.Shared\UserManager.Shared.csproj">
+      <Project>{e1ad835d-d0c3-4f6e-8148-2748c1111dd0}</Project>
+      <Name>UserManager.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

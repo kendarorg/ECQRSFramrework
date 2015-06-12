@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3C983F05-B3AC-46C0-80AE-627D63CBFB16}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UserManager.Commons</RootNamespace>
+    <AssemblyName>UserManager.Commons</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadModel\GroupUsersView.cs" />
+    <Compile Include="ReadModel\GroupRolesView.cs" />
+    <Compile Include="ReadModel\OrganizationUsersView.cs" />
+    <Compile Include="ReadModel\OrganizationRolesView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\ECQRS.Commons\ECQRS.Commons.csproj">
+      <Project>{897c65fb-fc3e-493b-8214-4541ac481d70}</Project>
+      <Name>ECQRS.Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UserManager.Applications\UserManager.Applications.csproj">
+      <Project>{2bc8508c-028a-48e0-bd13-48a5aa92789b}</Project>
+      <Name>UserManager.Applications</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UserManager.Organizations\UserManager.Organizations.csproj">
+      <Project>{649eec34-e6d1-40ba-bc34-fd8f47ea5722}</Project>
+      <Name>UserManager.Organizations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UserManager.Shared\UserManager.Shared.csproj">
+      <Project>{e1ad835d-d0c3-4f6e-8148-2748c1111dd0}</Project>
+      <Name>UserManager.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UserManager.Users\UserManager.Users.csproj">
+      <Project>{4725e852-bdd8-4ecd-b2cf-4c7416c1610d}</Project>
+      <Name>UserManager.Users</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TODO.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

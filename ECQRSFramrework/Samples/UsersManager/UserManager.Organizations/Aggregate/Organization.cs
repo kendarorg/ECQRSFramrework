@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UserManager.Organizations.Aggregate;
 
 namespace UserManager.Core.Organizations.Aggregate
 {
@@ -38,17 +39,40 @@ namespace UserManager.Core.Organizations.Aggregate
         public Organization()
         {
             Groups = new Dictionary<Guid, Group>();
+            Users = new HashSet<Guid>();
         }
 
         public bool IsDeleted { get; set; }
         public Guid Id { get; set; }
         public String Name { get; set; }
         public Dictionary<Guid, Group> Groups { get; set; }
+        public Dictionary<Guid, Role> Roles { get; set; }
+        public HashSet<Guid> Users { get; set; }
 
 
         internal bool HasGroup(Guid groupId)
         {
             return Groups.ContainsKey(groupId);
+        }
+        internal bool HasUser(Guid userId)
+        {
+            return Users.Contains(userId);
+        }
+
+        internal bool GroupHasUser(Guid groupId,Guid userId)
+        {
+            if (!HasUser(userId) || !HasGroup(groupId)) return false;
+            return Groups[groupId].Users.Contains(userId);
+        }
+        internal bool HasRole(Guid userId)
+        {
+            return Roles.ContainsKey(userId);
+        }
+
+        internal bool GroupHasRole(Guid groupId, Guid roleId)
+        {
+            if (!HasRole(roleId) || !HasGroup(groupId)) return false;
+            return Groups[groupId].Roles.Contains(roleId);
         }
 
         internal void AddGroup(Guid groupId, string code, string description)
@@ -72,5 +96,64 @@ namespace UserManager.Core.Organizations.Aggregate
             Groups.Remove(groupId);
         }
 
+        internal void AddUser(Guid userId)
+        {
+            Users.Add(userId);
+        }
+
+        internal void AddRole(Guid roleId,Guid applicationId)
+        {
+            Roles.Add(roleId, new Role
+            {
+                ApplicationId = applicationId,
+                RoleId = roleId
+            });
+        }
+
+        internal void AddUserToGroup(Guid groupId, Guid userId)
+        {
+            Groups[groupId].AddUser(userId);
+        }
+
+        internal void AddRoleToGroup(Guid groupId, Guid roleId)
+        {
+            Groups[groupId].AddRole(roleId);
+        }
+
+        internal void RemoveUserFromGroup(Guid groupId, Guid userId)
+        {
+            if (!HasGroup(groupId)) return;
+            Groups[groupId].RemoveUser(userId);
+        }
+
+        internal void RemoveRoleFromGroup(Guid groupId, Guid roleId)
+        {
+            if (!HasGroup(groupId)) return;
+            Groups[groupId].RemoveRole(roleId);
+        }
+
+        internal void RemoveUser(Guid userId)
+        {
+            if (Users.Contains(userId))
+            {
+                Users.Remove(userId);
+            }
+            foreach (var group in Groups.Values)
+            {
+                group.RemoveUser(userId);
+            }
+        }
+
+        internal void RemoveRole(Guid roleId)
+        {
+            if (Roles.ContainsKey(roleId))
+            {
+                Roles.Remove(roleId);
+            }
+            foreach (var group in Groups.Values)
+            {
+                group.RemoveRole(roleId);
+            }
+        }
     }
 }

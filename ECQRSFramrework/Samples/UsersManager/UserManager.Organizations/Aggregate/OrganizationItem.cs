@@ -125,6 +125,7 @@ namespace UserManager.Core.Organizations
         public void AddRole(Guid applicationId, Guid roleId)
         {
             CheckDeleted();
+            Check(_organization.HasRole(roleId), new AggregateException("Duplicate role " + roleId));
             ApplyChange(new OrganizationRoleAdded
             {
                 ApplicationId = applicationId,
@@ -134,9 +135,15 @@ namespace UserManager.Core.Organizations
             });
         }
 
+        public void Apply(OrganizationRoleAdded message)
+        {
+            _organization.AddRole(message.ApplicationId,message.RoleId);
+        }
+
         public void DeleteRole(Guid applicationId, Guid roleId)
         {
             CheckDeleted();
+            Check(!_organization.HasRole(roleId), new AggregateException("Missing role " + roleId));
             ApplyChange(new OrganizationRoleDeleted
             {
                 CorrelationId = LastCommand,
@@ -144,6 +151,11 @@ namespace UserManager.Core.Organizations
                 OrganizationId = Id,
                 RoleId = roleId
             });
+        }
+
+        public void Apply(OrganizationRoleDeleted message)
+        {
+            _organization.RemoveRole(message.RoleId);
         }
 
         #endregion Roles
@@ -214,6 +226,7 @@ namespace UserManager.Core.Organizations
         {
             CheckDeleted();
             Check(!_organization.HasGroup(groupId), new AggregateException("Missing group " + groupId));
+            Check(!_organization.HasRole(roleId), new AggregateException("Missing role " + roleId));
             ApplyChange(new OrganizationGroupRoleAdded
             {
                 ApplicationId = applicationId,
@@ -224,10 +237,16 @@ namespace UserManager.Core.Organizations
             });
         }
 
+        public void Apply(OrganizationGroupRoleAdded message)
+        {
+            _organization.AddRoleToGroup(message.GroupId, message.RoleId);
+        }
+
         public void DeleteRoleGroup(Guid groupId, Guid roleId)
         {
             CheckDeleted();
             Check(!_organization.HasGroup(groupId), new AggregateException("Missing group " + groupId));
+            Check(!_organization.HasRole(roleId), new AggregateException("Missing role " + roleId));
             ApplyChange(new OrganizationGroupRoleDeleted
             {
                 CorrelationId = LastCommand,
@@ -235,6 +254,10 @@ namespace UserManager.Core.Organizations
                 GroupId = groupId,
                 RoleId = roleId
             });
+        }
+        public void Apply(OrganizationGroupRoleDeleted message)
+        {
+            _organization.RemoveRoleFromGroup(message.GroupId, message.RoleId);
         }
 
         #endregion GroupRoles
@@ -244,6 +267,7 @@ namespace UserManager.Core.Organizations
         public void UserAssociate(Guid userId)
         {
             CheckDeleted();
+            Check(_organization.HasUser(userId), new AggregateException("Duplicate user " + userId));
             ApplyChange(new OrganizationUserAssociated
             {
                 OrganizationId = Id,
@@ -251,14 +275,25 @@ namespace UserManager.Core.Organizations
             });
         }
 
+        public void Apply(OrganizationUserAssociated message)
+        {
+            _organization.AddUser(message.UserId);
+        }
+
         public void UserDeassociate(Guid userId)
         {
             CheckDeleted();
+            Check(!_organization.HasUser(userId), new AggregateException("Missing user " + userId));
             ApplyChange(new OrganizationUserDeassociated
             {
                 OrganizationId = Id,
                 UserId = userId
             });
+        }
+
+        public void Apply(OrganizationUserDeassociated message)
+        {
+            _organization.RemoveUser(message.UserId);
         }
 
         #endregion OrganizationUsers
@@ -268,21 +303,35 @@ namespace UserManager.Core.Organizations
         public void GroupUserAssociate(Guid userId, Guid groupId)
         {
             CheckDeleted();
-            ApplyChange(new OrganizationUserAssociated
+            Check(!_organization.HasUser(userId), new AggregateException("Missing user " + userId));
+            Check(!_organization.HasGroup(groupId), new AggregateException("Missing group " + groupId));
+            ApplyChange(new OrganizationUserGroupAssociated
             {
                 OrganizationId = Id,
                 UserId = userId
             });
         }
 
+        public void Apply(OrganizationUserGroupAssociated message)
+        {
+            _organization.AddUserToGroup(message.GroupId, message.UserId);
+        }
+
         public void GroupUserDeassociate(Guid userId, Guid groupId)
         {
             CheckDeleted();
-            ApplyChange(new OrganizationUserDeassociated
+            Check(!_organization.HasUser(userId), new AggregateException("Missing user " + userId));
+            Check(!_organization.HasGroup(groupId), new AggregateException("Missing group " + groupId));
+            ApplyChange(new OrganizationUserGroupDeassociated
             {
                 OrganizationId = Id,
                 UserId = userId
             });
+        }
+
+        public void Apply(OrganizationUserGroupDeassociated message)
+        {
+            _organization.RemoveUserFromGroup(message.GroupId, message.UserId);
         }
 
         #endregion OrganizationGroupUser

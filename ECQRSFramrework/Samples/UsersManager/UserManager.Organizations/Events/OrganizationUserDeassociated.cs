@@ -39,4 +39,10 @@ namespace UserManager.Organizations.Events
         public Guid OrganizationId { get; set; }
         public Guid UserId { get; set; }
     }
+    public class OrganizationUserGroupDeassociated : Event
+    {
+        public Guid OrganizationId { get; set; }
+        public Guid UserId { get; set; }
+        public Guid GroupId { get; set; }
+    }
 }

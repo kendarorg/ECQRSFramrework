@@ -34,9 +34,15 @@ using System.Threading.Tasks;
 
 namespace UserManager.Organizations.Events
 {
-    public class OrganizationUserAssociated:Event
+    public class OrganizationUserAssociated : Event
     {
         public Guid OrganizationId { get; set; }
         public Guid UserId { get; set; }
+    }
+    public class OrganizationUserGroupAssociated : Event
+    {
+        public Guid OrganizationId { get; set; }
+        public Guid UserId { get; set; }
+        public Guid GroupId { get; set; }
     }
 }

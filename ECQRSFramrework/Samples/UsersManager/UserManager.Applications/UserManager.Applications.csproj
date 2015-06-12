@@ -81,6 +81,10 @@
       <Project>{897c65fb-fc3e-493b-8214-4541ac481d70}</Project>
       <Name>ECQRS.Commons</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UserManager.Shared\UserManager.Shared.csproj">
+      <Project>{e1ad835d-d0c3-4f6e-8148-2748c1111dd0}</Project>
+      <Name>UserManager.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

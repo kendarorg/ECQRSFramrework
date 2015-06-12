@@ -164,9 +164,9 @@
       <Project>{2bc8508c-028a-48e0-bd13-48a5aa92789b}</Project>
       <Name>UserManager.Applications</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UserManager.Commons\UserManager.Commons.csproj">
+    <ProjectReference Include="..\UserManager.Commons\UserManager.Views.csproj">
       <Project>{3c983f05-b3ac-46c0-80ae-627d63cbfb16}</Project>
-      <Name>UserManager.Commons</Name>
+      <Name>UserManager.Views</Name>
     </ProjectReference>
     <ProjectReference Include="..\UserManager.Organizations\UserManager.Organizations.csproj">
       <Project>{649eec34-e6d1-40ba-bc34-fd8f47ea5722}</Project>

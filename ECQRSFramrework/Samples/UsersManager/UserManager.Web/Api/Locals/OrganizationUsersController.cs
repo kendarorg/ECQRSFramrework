@@ -39,7 +39,7 @@ using UserManager.Model.Organizations;
 using UserManager.Core.Users.ReadModel;
 using UserManager.Core.Users.Commands;
 using UserManager.Core.Applications.ReadModel;
-using UserManager.Organizations.Commands;
+using UserManager.Commons.ReadModel;
 
 namespace UserManager.Api
 {
@@ -76,12 +76,12 @@ namespace UserManager.Api
             var parsedRange = AngularApiUtils.ParseRange(range);
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
 
-            var where = _users.Where();
+            var where = _users.Where(a=> a.Deleted == false);
             if (parsedFilters.ContainsKey("EMail")) where = where.Where(a => a.EMail.Contains(parsedFilters["EMail"].ToString()));
             if (parsedFilters.ContainsKey("UserName")) where = where.Where(a => a.UserName.Contains(parsedFilters["UserName"].ToString()));
 
-            var organizationUsers = _orgUsers.Where(u => u.OrganizationId == organizationId.Value).ToList().Select(u => u.UserId).ToList();
-
+            var organizationUsers = _orgUsers.Where(u => u.OrganizationId == organizationId.Value && u.Deleted == false).ToList().Select(u => u.UserId).ToList();
+            if (organizationUsers.Count == 0) return new List<UserListItem>();
             return where
                 .Where(u => organizationUsers.Contains(u.Id))
                 .Skip(parsedRange.From).Take(parsedRange.Count)
@@ -93,7 +93,7 @@ namespace UserManager.Api
         public void Delete(Guid organizationId, Guid userId)
         {
             var item = _orgUsers.Where(u => u.OrganizationId == organizationId && u.UserId == userId).ToList().FirstOrDefault();
-            _bus.Send(new OrganizationUserDeassociate
+            _bus.Send(new UserOrganizationDeassociate
             {
                 UserId = userId,
                 OrganizationId = organizationId

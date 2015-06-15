@@ -42,8 +42,10 @@ namespace UserManager.Core.Applications.ReadModel
         [AutoGen(false)]
         public Guid Id { get; set; }
         public Guid ApplicationId { get; set; }
+        public string ApplicationName { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
+        public bool Deleted { get; set; }
     }
 
     public class ApplicationRolesView : IEventView
@@ -60,6 +62,7 @@ namespace UserManager.Core.Applications.ReadModel
             _repository.Save(new ApplicationRoleItem
             {
                 ApplicationId = message.ApplicationId,
+                ApplicationName = message.ApplicationName,
                 Id = message.RoleId,
                 Code = message.Code,
                 Description = message.Description
@@ -87,6 +90,14 @@ namespace UserManager.Core.Applications.ReadModel
             _repository.UpdateWhere(new
             {
                 Deleted = true,
+            }, x => x.ApplicationId == message.ApplicationId);
+        }
+
+        public void Handle(ApplicationModified message)
+        {
+            _repository.UpdateWhere(new
+            {
+                ApplicationName = message.Name,
             }, x => x.ApplicationId == message.ApplicationId);
         }
     }

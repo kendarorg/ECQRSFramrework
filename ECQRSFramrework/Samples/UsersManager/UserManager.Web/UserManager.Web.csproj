@@ -172,6 +172,10 @@
       <Project>{649eec34-e6d1-40ba-bc34-fd8f47ea5722}</Project>
       <Name>UserManager.Organizations</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UserManager.Shared\UserManager.Shared.csproj">
+      <Project>{e1ad835d-d0c3-4f6e-8148-2748c1111dd0}</Project>
+      <Name>UserManager.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UserManager.Users\UserManager.Users.csproj">
       <Project>{4725e852-bdd8-4ecd-b2cf-4c7416c1610d}</Project>
       <Name>UserManager.Users</Name>

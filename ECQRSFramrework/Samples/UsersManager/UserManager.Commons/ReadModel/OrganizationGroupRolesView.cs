@@ -62,10 +62,7 @@ namespace UserManager.Commons.ReadModel
                 && ou.GroupId == message.GroupId).FirstOrDefault();
 
             if (result == null) return;
-            _repository.UpdateWhere(new
-            {
-                Deleted = true,
-            }, x=>x.Id == result.Id);
+            _repository.DeleteWhere( x => x.Id == result.Id);
         }
 
         public void Handle(OrganizationRoleDeleted message)
@@ -74,10 +71,7 @@ namespace UserManager.Commons.ReadModel
                 && ou.RoleId == message.RoleId).FirstOrDefault();
 
             if (result == null) return;
-            _repository.UpdateWhere(new
-            {
-                Deleted = true,
-            }, x=>x.Id == result.Id);
+            _repository.DeleteWhere(x => x.Id == result.Id);
         }
 
         public void Handle(OrganizationGroupModified message)
@@ -93,10 +87,7 @@ namespace UserManager.Commons.ReadModel
 
         public void Handle(OrganizationGroupDeleted message)
         {
-            _repository.UpdateWhere(new
-            {
-                Deleted = true,
-            }, or => or.OrganizationId == message.OrganizationId
+            _repository.DeleteWhere(or => or.OrganizationId == message.OrganizationId
                 && or.GroupId == message.OrganizationId);
         }
 
@@ -112,10 +103,7 @@ namespace UserManager.Commons.ReadModel
 
         public void Handle(ApplicationDeleted message)
         {
-            _repository.UpdateWhere(new
-            {
-                Deleted = true,
-            }, or => or.ApplicationId == message.ApplicationId);
+            _repository.DeleteWhere(or => or.ApplicationId == message.ApplicationId);
         }
 
         public void Handle(ApplicationRoleModified message)
@@ -130,10 +118,7 @@ namespace UserManager.Commons.ReadModel
 
         public void Handle(ApplicationRoleDeleted message)
         {
-            _repository.UpdateWhere(new
-            {
-                Deleted = true,
-            }, or => or.ApplicationId == message.ApplicationId
+            _repository.DeleteWhere(or => or.ApplicationId == message.ApplicationId
                 && or.RoleId == message.RoleId);
         }
 
@@ -149,10 +134,7 @@ namespace UserManager.Commons.ReadModel
 
         public void Handle(OrganizationDeleted message)
         {
-            _repository.UpdateWhere(new
-            {
-                Deleted = true,
-            }, or => or.OrganizationId == message.OrganizationId);
+            _repository.DeleteWhere(or => or.OrganizationId == message.OrganizationId);
         }
     }
 }

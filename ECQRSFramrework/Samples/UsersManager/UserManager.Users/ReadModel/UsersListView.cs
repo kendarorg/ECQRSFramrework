@@ -47,6 +47,7 @@ namespace UserManager.Core.Users.ReadModel
         public Guid Id { get; set; }
         public string UserName { get; set; }
         public string EMail { get; set; }
+        public bool Deleted { get; set; }
 
         public UserListItem(Guid id, string userName,string eMail)
         {
@@ -72,7 +73,9 @@ namespace UserManager.Core.Users.ReadModel
 
         public void Handle(UserDeleted message)
         {
-            _repository.Delete(message.UserId);
+            _repository.UpdateWhere(new {
+                Deleted = true
+            },a=>a.Id == message.UserId);
         }
 
         public void Handle(UserModified message)

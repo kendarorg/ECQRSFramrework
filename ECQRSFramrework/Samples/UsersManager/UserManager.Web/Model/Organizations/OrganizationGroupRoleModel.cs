@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using UserManager.Commons.ReadModel;
 using UserManager.Core.Applications.ReadModel;
 using UserManager.Core.Organizations.ReadModel;
 
@@ -58,6 +59,7 @@ namespace UserManager.Model.Organizations
                 RoleCode = par.Code,
                 ApplicationId = par.ApplicationId,
                 OrganizationId = organizationId,
+                ApplicationName = par.ApplicationName,
                 Id = selectedItem == null ? Guid.NewGuid() : selectedItem.Id,
                 GroupId = groupId,
                 RoleId = par.Id,

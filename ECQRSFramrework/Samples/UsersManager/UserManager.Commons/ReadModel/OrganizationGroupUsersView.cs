@@ -40,7 +40,12 @@ namespace UserManager.Commons.ReadModel
                 && ou.UserId == message.UserId
                 && ou.GroupId == message.GroupId).FirstOrDefault();
 
-            if (result != null) return;
+            if (result != null)
+            {
+                result.Deleted = false;
+                _repository.Update(result);
+                return;
+            }
             _repository.Save(new OrganizationGroupUserItem
             {
                 Id = message.CorrelationId,

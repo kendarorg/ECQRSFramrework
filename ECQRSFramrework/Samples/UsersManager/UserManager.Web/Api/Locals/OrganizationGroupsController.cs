@@ -39,7 +39,7 @@ using UserManager.Model.Organizations;
 using UserManager.Core.Users.ReadModel;
 using UserManager.Core.Users.Commands;
 using UserManager.Core.Applications.ReadModel;
-using UserManager.Organizations.Commands;
+using UserManager.Commons.ReadModel;
 
 namespace UserManager.Api
 {
@@ -83,7 +83,7 @@ namespace UserManager.Api
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
 
             var where = _groups.Where();
-            where = where.Where(a => a.OrganizationId == organizationId.Value);
+            where = where.Where(a => a.OrganizationId == organizationId.Value && a.Deleted == false);
             if (parsedFilters.ContainsKey("Code")) where = where.Where(a => a.Code.Contains(parsedFilters["Code"].ToString()));
             if (parsedFilters.ContainsKey("Description")) where = where.Where(a => a.Description.Contains(parsedFilters["Description"].ToString()));
 
@@ -127,7 +127,7 @@ namespace UserManager.Api
         public void Delete(Guid id)
         {
             var item = _groups.Get(id);
-            _bus.Send(new OrganizationGroupDelete { OrganizationId = item.OrganizationId, GroupId = id });
+            _bus.Send(new OrganizationGroupDelete { OrganizationId = item.OrganizationId, GroupId = item.Id });
         }
 
         /// <summary>
@@ -147,19 +147,19 @@ namespace UserManager.Api
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
 
             //First take all the possible roles,filtered
-            var allRoles = _applicationRoles.Where();
+            var allRoles = _applicationRoles.Where(a=>a.Deleted ==false);
             if (parsedFilters.ContainsKey("Code")) allRoles = allRoles.Where(a => a.Code.Contains(parsedFilters["Code"].ToString()));
             if (parsedFilters.ContainsKey("ApplicationName")) allRoles = allRoles.Where(a => a.ApplicationName.Contains(parsedFilters["ApplicationName"].ToString()));
             var allRolesList = allRoles.ToList();
 
             //Takes all the available roles for the organization
-            var availableRoles = _roles.Where(a => a.OrganizationId == organizationId.Value).ToList().Select(r => r.RoleId);
+            var availableRoles = _roles.Where(a => a.OrganizationId == organizationId.Value && a.Deleted == false).ToList().Select(r => r.RoleId);
 
             //Take only the role instance available
             allRolesList = allRolesList.Where(r => availableRoles.Contains(r.Id)).ToList();
 
             //Takes the roles used by the current group
-            var associatedRoles = _groupsRoles.Where(p => p.GroupId == groupId.Value && p.OrganizationId == organizationId.Value).ToList();
+            var associatedRoles = _groupsRoles.Where(p => p.GroupId == groupId.Value && p.OrganizationId == organizationId.Value && p.Deleted == false).ToList();
 
             return allRolesList
                 .Skip(parsedRange.From).Take(parsedRange.Count)
@@ -211,14 +211,15 @@ namespace UserManager.Api
             var parsedRange = AngularApiUtils.ParseRange(range);
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
 
-            var where = _users.Where();
+            var where = _users.Where(a=> a.Deleted == false);
             if (parsedFilters.ContainsKey("EMail")) where = where.Where(a => a.EMail.Contains(parsedFilters["EMail"].ToString()));
             if (parsedFilters.ContainsKey("UserName")) where = where.Where(a => a.UserName.Contains(parsedFilters["UserName"].ToString()));
 
-            var organizationUsers = _orgUsers.Where(u => u.OrganizationId == organizationId).ToList().Select(u => u.UserId).ToList();
-            var groupUserIds = _groupUsers.Where(u => u.OrganizationId == organizationId && u.GroupId == groupId)
+            var organizationUsers = _orgUsers.Where(u => u.OrganizationId == organizationId && u.Deleted == false).ToList().Select(u => u.UserId).ToList();
+            var groupUserIds = _groupUsers.Where(u => u.OrganizationId == organizationId && u.GroupId == groupId && u.Deleted == false)
                 .ToList();
 
+            if (organizationUsers.Count == 0) return new List<OrganizationGroupUserModel>();
 
             return where
                 .Where(u => organizationUsers.Contains(u.Id))
@@ -231,12 +232,11 @@ namespace UserManager.Api
         [Route("api/OrganizationUsers/{organizationId}/{groupId}/{userId}")]
         public void AssociateUserWithGroup(Guid organizationId, Guid groupId, Guid userId)
         {
-            _bus.Send(new OrganizationUserGroupAssociateCommon
+            _bus.Send(new UserOrganizationGroupAssociate
             {
                 OrganizationId = organizationId,
                 GroupId = groupId,
-                UserId = userId,
-                Id = Guid.NewGuid()
+                UserId = userId
             });
         }
 
@@ -244,7 +244,7 @@ namespace UserManager.Api
         [Route("api/OrganizationUsers/{organizationId}/{groupId}/{userId}")]
         public void RemoveUserFromGroup(Guid organizationId, Guid groupId, Guid userId)
         {
-            _bus.Send(new OrganizationUserGroupDissociateCommon
+            _bus.Send(new UserOrganizationGroupDeassociate
             {
                 OrganizationId = organizationId,
                 GroupId = groupId,

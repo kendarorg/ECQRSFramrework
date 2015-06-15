@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using UserManager.Commons.ReadModel;
 using UserManager.Core.Organizations.ReadModel;
 using UserManager.Core.Users.ReadModel;
 

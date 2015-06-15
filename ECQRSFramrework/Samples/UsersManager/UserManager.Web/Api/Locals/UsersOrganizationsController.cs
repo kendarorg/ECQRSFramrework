@@ -33,12 +33,12 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using UserManager.Commons.ReadModel;
 using UserManager.Core;
 using UserManager.Core.Organizations.ReadModel;
 using UserManager.Core.Users.Commands;
 using UserManager.Core.Users.ReadModel;
 using UserManager.Model.Users;
-using UserManager.Organizations.Commands;
 
 namespace UserManager.Api
 {
@@ -62,7 +62,7 @@ namespace UserManager.Api
             var parsedRange = AngularApiUtils.ParseRange(range);
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
 
-            var where = _organizations.Where();
+            var where = _organizations.Where(a=> a.Deleted == false);
             if (parsedFilters.ContainsKey("Name")) where = where.Where(a => a.Name.Contains(parsedFilters["Name"].ToString()));
 
             var realOrgUsers = _orgUsers.Where(u => u.UserId == userId).ToList();
@@ -78,7 +78,7 @@ namespace UserManager.Api
         [Route("api/UserOrganizations/{userId}")]
         public void Post(Guid userId, [FromBody]UserOrganizationModel value)
         {
-            _bus.Send(new OrganizationUserAssociate
+            _bus.Send(new UserOrganizationAssociate
             {
                 UserId = value.UserId,
                 OrganizationId = value.OrganizationId
@@ -90,7 +90,7 @@ namespace UserManager.Api
         [Route("api/UserOrganizations/{userId}/{organizationId}/{id}")]
         public void Delete(Guid userId, Guid organizationId)
         {
-            _bus.Send(new OrganizationUserDeassociate
+            _bus.Send(new UserOrganizationDeassociate
             {
                 UserId = userId,
                 OrganizationId = organizationId

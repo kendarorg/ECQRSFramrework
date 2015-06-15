@@ -45,6 +45,7 @@ namespace UserManager.Core.Users.ReadModel
         public Guid UserId { get; set; }
         public string Permission { get; set; }
         public Guid DataId { get; set; }
+        public bool Deleted { get; set; }
     }
 
     public class UsersRightView : IEventView

@@ -37,6 +37,7 @@ using UserManager.Core.Organizations.Commands;
 using UserManager.Core.Organizations.ReadModel;
 using UserManager.Model.Organizations;
 using UserManager.Core.Applications.ReadModel;
+using UserManager.Commons.ReadModel;
 
 namespace UserManager.Api
 {
@@ -57,22 +58,22 @@ namespace UserManager.Api
         [Route("api/OrganizationRoles/list/{organizationId}")]
         public IEnumerable<OrganizationRoleModel> GetList(Guid? organizationId, string range = null, string filter = null)
         {
-            if(organizationId==null) throw new HttpException(400,"Invalid organization Id");
+            if (organizationId == null) throw new HttpException(400, "Invalid organization Id");
             var parsedRange = AngularApiUtils.ParseRange(range);
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
 
-            var organizationRoles =  _organizationRoles.Where(a => a.OrganizationId == organizationId.Value).ToList();
+            var organizationRoles = _organizationRoles.Where(a => a.OrganizationId == organizationId.Value && a.Deleted == false).ToList();
 
-            var where = _applicationRoles.Where();
+            var where = _applicationRoles.Where(a => a.Deleted == false);
             if (parsedFilters.ContainsKey("Code")) where = where.Where(a => a.Code.Contains(parsedFilters["Code"].ToString()));
             if (parsedFilters.ContainsKey("ApplicationName")) where = where.Where(a => a.ApplicationName.Contains(parsedFilters["ApplicationName"].ToString()));
 
             return where
                 .Skip(parsedRange.From).Take(parsedRange.Count)
                 .ToList()
-                .Select(i=>i.ToOrganizationRoleModel(organizationRoles));
+                .Select(i => i.ToOrganizationRoleModel(organizationRoles));
         }
-        
+
         // GET: api/Organizations/5/1
         public OrganizationRoleItem Get(Guid id)
         {
@@ -101,7 +102,7 @@ namespace UserManager.Api
         public void Delete(Guid organizationId, Guid id)
         {
             var item = _organizationRoles.Get(id);
-            _bus.Send(new OrganizationRoleDelete { OrganizationId = item.OrganizationId, RoleId = id });
+            _bus.Send(new OrganizationRoleDelete { OrganizationId = item.OrganizationId, RoleId = item.RoleId });
         }
     }
 }

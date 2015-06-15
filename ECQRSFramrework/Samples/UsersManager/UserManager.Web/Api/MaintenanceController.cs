@@ -139,7 +139,7 @@ namespace UserManager.Api
                 for (int j = 0; j < permissions; j++)
                 {
                     _bus.Send(new ApplicationPermissionAdd
-                    {
+                    {                        
                         PermissionId = Guid.NewGuid(),
                         ApplicationId = application.Id,
                         Code = application.Name + "_p" + j,
@@ -151,7 +151,7 @@ namespace UserManager.Api
                 for (int j = 0; j < roles; j++)
                 {
                     _bus.Send(new ApplicationRoleCreate
-                    {
+                    {                        
                         RoleId = Guid.NewGuid(),
                         ApplicationId = application.Id,
                         Code = application.Name +"_r" + j,

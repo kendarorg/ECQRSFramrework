@@ -38,8 +38,6 @@ using UserManager.Core.Applications.ReadModel;
 using UserManager.Model.Applications;
 using UserManager.Core.Users.ReadModel;
 using UserManager.Core.Users.Commands;
-using UserManager.Commons.Applications;
-using UserManager.Commons.Roles;
 
 namespace UserManager.Api
 {
@@ -73,7 +71,7 @@ namespace UserManager.Api
             var parsedRange = AngularApiUtils.ParseRange(range);
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
 
-            var where = _roles.Where(a => a.ApplicationId == applicationId.Value);
+            var where = _roles.Where(a => a.ApplicationId == applicationId.Value && a.Deleted == false);
             if (parsedFilters.ContainsKey("Code")) where = where.Where(a => a.Code.Contains(parsedFilters["Code"].ToString()));
             if (parsedFilters.ContainsKey("Description")) where = where.Where(a => a.Description.Contains(parsedFilters["Description"].ToString()));
 
@@ -117,7 +115,7 @@ namespace UserManager.Api
         public void Delete(Guid id)
         {
             var item = _roles.Get(id);
-            _bus.Send(new DeleteCommonRole { ApplicationId = item.ApplicationId, RoleId = id });
+            _bus.Send(new ApplicationRoleDelete { ApplicationId = item.ApplicationId, RoleId = item.Id });
         }
 
         [Route("api/ApplicationRoles/permissions/{applicationId}/{roleId}")]
@@ -129,10 +127,10 @@ namespace UserManager.Api
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
 
 
-            var associatedPermissions = _rolesPermissions.Where(p=>p.RoleId==roleId.Value && p.ApplicationId==applicationId.Value)
+            var associatedPermissions = _rolesPermissions.Where(p => p.RoleId == roleId.Value && p.ApplicationId == applicationId.Value && p.Deleted == false)
                 .ToList();
 
-            var wherePermissions = _permissions.Where(a => a.ApplicationId == applicationId.Value);
+            var wherePermissions = _permissions.Where(a => a.ApplicationId == applicationId.Value && a.Deleted == false);
             if (parsedFilters.ContainsKey("Code")) wherePermissions = wherePermissions.Where(a => a.Code.Contains(parsedFilters["Code"].ToString()));
             if (parsedFilters.ContainsKey("Description")) wherePermissions = wherePermissions.Where(a => a.Description.Contains(parsedFilters["Description"].ToString()));
             
@@ -182,7 +180,7 @@ namespace UserManager.Api
             _bus.Send(new ApplicationRolePermissionDelete
             {
                 ApplicationId = applicationId.Value,
-                RoleId = roleId.Value,
+                RoleId = item.RoleId,
                 PermissionId = item.PermissionId,
                 RolePermissionId = item.Id
             });

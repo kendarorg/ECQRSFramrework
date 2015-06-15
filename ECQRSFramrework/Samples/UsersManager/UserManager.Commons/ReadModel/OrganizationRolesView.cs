@@ -36,7 +36,12 @@ namespace UserManager.Commons.ReadModel
         {
             var result = _repository.Where(ou => ou.OrganizationId == message.OrganizationId
                 && ou.RoleId == message.RoleId).FirstOrDefault();
-            if (result != null) return;
+            if (result != null)
+            {
+                result.Deleted = false;
+                _repository.Update(result);
+                return;
+            }
             _repository.Save(new OrganizationRoleItem
             {
                 Id = message.CorrelationId,

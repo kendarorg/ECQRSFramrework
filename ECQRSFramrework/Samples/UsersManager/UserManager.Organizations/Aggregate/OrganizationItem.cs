@@ -217,7 +217,6 @@ namespace UserManager.Core.Organizations
         public void DeleteGroup(Guid groupId)
         {
             CheckDeleted();
-            Check(!_organization.HasGroup(groupId), new AggregateException("Missing group " + groupId));
             ApplyChange(new OrganizationGroupDeleted
             {
                 CorrelationId = LastCommand,

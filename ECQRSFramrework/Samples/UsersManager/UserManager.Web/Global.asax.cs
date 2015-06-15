@@ -50,6 +50,7 @@ using UserManager.Castle;
 using UserManager.Core.Applications.ReadModel;
 using UserManager.Core.Users.ReadModel;
 using UserManager.Core.Organizations.ReadModel;
+using UserManager.Commons.ReadModel;
 
 namespace UserManager
 {
@@ -110,6 +111,7 @@ namespace UserManager
             {
                 RegisterRepository<UserListItem>(cn);
                 RegisterRepository<UserDetailItem>(cn);
+                RegisterRepository<UsersRightItem>(cn);                
 
                 RegisterRepository<ApplicationListItem>(cn);
                 RegisterRepository<ApplicationPermissionItem>(cn);
@@ -122,6 +124,8 @@ namespace UserManager
                 RegisterRepository<OrganizationGroupRoleItem>(cn);
                 RegisterRepository<OrganizationUserItem>(cn);
                 RegisterRepository<OrganizationGroupUserItem>(cn);
+
+                RegisterRepository<OrganizationApplicationItem>(cn);
             }
         }
 

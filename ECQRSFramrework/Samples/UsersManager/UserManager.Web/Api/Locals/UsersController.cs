@@ -33,7 +33,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using UserManager.Commons.Groups;
 using UserManager.Core;
 using UserManager.Core.Users.Commands;
 using UserManager.Core.Users.ReadModel;
@@ -62,7 +61,7 @@ namespace UserManager.Api
             var parsedRange = AngularApiUtils.ParseRange(range);
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
 
-            var where = _list.Where();
+            var where = _list.Where(a=> a.Deleted == false);
             if (parsedFilters.ContainsKey("EMail")) where = where.Where(a => a.EMail.Contains(parsedFilters["EMail"].ToString()));
             if (parsedFilters.ContainsKey("UserName")) where = where.Where(a => a.UserName.Contains(parsedFilters["UserName"].ToString()));
 
@@ -81,7 +80,7 @@ namespace UserManager.Api
         // POST: api/Users
         public void Post([FromBody]UserCreateModel value)
         {
-            _bus.Send(new CreateUserWithGroup
+            _bus.Send(new UserCreateWithGroup
             {
                 UserName = value.UserName,
                 FirstName = value.FirstName,
@@ -109,7 +108,7 @@ namespace UserManager.Api
         // DELETE: api/Users/5
         public void Delete(Guid id)
         {
-            _bus.Send(new DeleteCommonUser { UserId = id });
+            _bus.Send(new UserDelete { UserId = id });
         }
     }
 }

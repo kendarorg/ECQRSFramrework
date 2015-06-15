@@ -58,7 +58,7 @@ namespace UserManager.Api
             var parsedRange = AngularApiUtils.ParseRange(range);
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
             
-            var where = _list.Where(a=>a.ApplicationId == applicationId.Value);
+            var where = _list.Where(a=>a.ApplicationId == applicationId.Value && a.Deleted == false);
             if (parsedFilters.ContainsKey("Code")) where = where.Where(a => a.Code.Contains(parsedFilters["Code"].ToString()));
             if (parsedFilters.ContainsKey("Description")) where = where.Where(a => a.Description.Contains(parsedFilters["Description"].ToString()));
 

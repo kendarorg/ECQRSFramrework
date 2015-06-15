@@ -29,7 +29,10 @@
             return result;
         };
 
-        this.get = function (item, scope) { return '/api/OrganizationRoles/' + item.Id; }
+        this.get = function (item, scope) {
+            
+            return '/api/OrganizationRoles/' + item.Id;
+        }
         /*this.add = function (item, scope) { return '/api/OrganizationRoles'; }
         this.delete = function (item, scope) { return '/api/OrganizationRoles/' + item.Id; }*/
 
@@ -39,6 +42,7 @@
             encodeURI(scope.item.Id)
         }
         this.delete = function (item, scope) {
+            console.log(item);
             return '/api/OrganizationRoles/' +
             encodeURI(scope.item.Id) + '/' + item.Id;
         }

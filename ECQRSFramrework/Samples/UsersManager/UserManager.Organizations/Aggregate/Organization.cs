@@ -85,7 +85,7 @@ namespace UserManager.Core.Organizations.Aggregate
             Groups.Remove(groupId);
         }
 
-        internal void AddRole(Guid roleId,Guid applicationId)
+        internal void AddRole(Guid applicationId,Guid roleId)
         {
             Roles.Add(roleId, new Role
             {

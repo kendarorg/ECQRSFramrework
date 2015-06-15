@@ -33,7 +33,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using UserManager.Commons.Applications;
 using UserManager.Core;
 using UserManager.Core.Applications.Commands;
 using UserManager.Core.Applications.ReadModel;
@@ -58,7 +57,7 @@ namespace UserManager.Api
             var parsedRange = AngularApiUtils.ParseRange(range);
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
 
-            var where = _list.Where();
+            var where = _list.Where(a=>a.Deleted == false);
             if (parsedFilters.ContainsKey("Name")) where = where.Where(a => a.Name.Contains(parsedFilters["Name"].ToString()));
 
             return where
@@ -96,7 +95,7 @@ namespace UserManager.Api
         // DELETE: api/Applications/5
         public void Delete(Guid id)
         {
-            _bus.Send(new DeleteCommonApplication { ApplicationId = id });
+            _bus.Send(new ApplicationDelete { ApplicationId = id });
         }
     }
 }

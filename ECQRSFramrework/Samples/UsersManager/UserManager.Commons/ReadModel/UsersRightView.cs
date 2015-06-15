@@ -28,60 +28,40 @@
 using ECQRS.Commons.Events;
 using ECQRS.Commons.Interfaces;
 using ECQRS.Commons.Repositories;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UserManager.Core.Organizations.Events;
+using UserManager.Core.Users.Events;
 
-namespace UserManager.Core.Organizations.ReadModel
+namespace UserManager.Core.Users.ReadModel
 {
-    public class OrganizationGroupItem : IEntity
+    public class UsersRightItem : IEntity
     {
         [AutoGen(false)]
         public Guid Id { get; set; }
-        public Guid OrganizationId { get; set; }
-        public string Code { get; set; }
-        public string Description { get; set; }
-        public bool Deleted { get; set; }
+        public Guid UserId { get; set; }
+        public string Permission { get; set; }
+        public Guid DataId { get; set; }
     }
 
-    public class OrganizationGroupsView : IEventView
+    public class UsersRightView : IEventView
     {
-        private readonly IRepository<OrganizationGroupItem> _repository;
+        private readonly IRepository<UsersRightItem> _repository;
 
-        public OrganizationGroupsView(IRepository<OrganizationGroupItem> repository)
+        public UsersRightView(IRepository<UsersRightItem> repository)
         {
             _repository = repository;
         }
 
-        public void Handle(OrganizationGroupCreated message)
-        {
-            _repository.Save(new OrganizationGroupItem
-            {
-                OrganizationId = message.OrganizationId,
-                Id = message.GroupId,
-                Code = message.Code,
-                Description = message.Description
-            });
-        }
-
-        public void Handle(OrganizationGroupModified message)
-        {
-            var item = _repository.Get(message.GroupId);
-            item.Code = message.Code;
-            item.Description = message.Description;
-            _repository.Update(item);
-        }
-
-        public void Handle(OrganizationModified message)
+        public void Handle(UserDeleted message)
         {
             _repository.UpdateWhere(new
             {
-                OrganizationName = message.Name
-            }, x => x.OrganizationId == message.OrganizationId);
+                Deleted = true,
+            }, x => x.Id == message.UserId);
         }
 
         public void Handle(OrganizationDeleted message)
@@ -89,7 +69,7 @@ namespace UserManager.Core.Organizations.ReadModel
             _repository.UpdateWhere(new
             {
                 Deleted = true,
-            }, x => x.OrganizationId == message.OrganizationId);
+            }, x => x.DataId == message.OrganizationId);
         }
 
         public void Handle(OrganizationGroupDeleted message)
@@ -97,7 +77,7 @@ namespace UserManager.Core.Organizations.ReadModel
             _repository.UpdateWhere(new
             {
                 Deleted = true,
-            }, x=>x.Id == message.GroupId);
+            }, x => x.DataId == message.OrganizationId);
         }
     }
 }

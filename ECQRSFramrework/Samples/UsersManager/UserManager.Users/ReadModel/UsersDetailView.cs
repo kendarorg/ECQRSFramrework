@@ -49,6 +49,7 @@ namespace UserManager.Core.Users.ReadModel
         public string EMail { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public bool Deleted { get; set; }
 
         public UserDetailItem(Guid id, string userName, string eMail)
         {
@@ -60,7 +61,7 @@ namespace UserManager.Core.Users.ReadModel
 
 
 
-    public class UsersDetailView : IEventHandler, IECQRSService
+    public class UsersDetailView : IEventView
     {
         private readonly IRepository<UserDetailItem> _repository;
 
@@ -83,7 +84,10 @@ namespace UserManager.Core.Users.ReadModel
 
         public void Handle(UserDeleted message)
         {
-            _repository.Delete(message.UserId);
+            _repository.UpdateWhere(new
+            {
+                Deleted = true,
+            }, x=>x.Id == message.UserId);
         }
 
         public void Handle(UserModified message)

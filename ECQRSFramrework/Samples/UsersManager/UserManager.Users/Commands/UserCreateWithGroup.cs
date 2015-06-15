@@ -25,30 +25,24 @@
 // ===========================================================
 
 
+using ECQRS.Commons.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UserManager.Core.Users.Aggregate
+namespace UserManager.Core.Users.Commands
 {
-    public class User
+    public class UserCreateWithGroup : Command
     {
-        public User()
-        {
-            Organizations = new Dictionary<Guid,Organization>();
-            Permissions = new List<Permission>();
-        }
-
-        public Guid Id { get; set; }
-        public String UserName { get; set; }
-        public String EMail { get; set; }
-        public String FirstName { get; set; }
-        public String LastName { get; set; }
-        public String HashedPassword { get; set; }
-        public bool Deleted { get; set; }
-        public Dictionary<Guid, Organization> Organizations { get; set; }
-        public List<Permission> Permissions { get; set; }
+        public Guid UserId { get; set; }
+        public string EMail { get; set; }
+        public string UserName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string HashedPassword { get; set; }
+        public Guid OrganizationId { get; set; }
+        public Guid GroupId { get; set; }
     }
 }

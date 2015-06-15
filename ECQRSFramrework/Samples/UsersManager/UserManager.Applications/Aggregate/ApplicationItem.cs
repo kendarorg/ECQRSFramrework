@@ -49,7 +49,7 @@ namespace UserManager.Core.Applications
 
         private void CheckDeleted()
         {
-            if (_application.IsDeleted)
+            if (_application.Deleted)
             {
                 throw new AggregateNotFoundException();
             }
@@ -114,7 +114,7 @@ namespace UserManager.Core.Applications
 
         public void Apply(ApplicationDeleted e)
         {
-            _application.IsDeleted = true;
+            _application.Deleted = true;
         }
 
         #endregion CRUD

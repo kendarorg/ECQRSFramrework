@@ -37,13 +37,11 @@ namespace UserManager.Core.Organizations.Aggregate
     {
         public Group()
         {
-            Users = new HashSet<Guid>();
             Roles = new HashSet<Guid>();
         }
         public Guid Id { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
-        public HashSet<Guid> Users { get; set; }
         public HashSet<Guid> Roles { get; set; }
 
         internal void RemoveRole(Guid roleId)
@@ -59,22 +57,6 @@ namespace UserManager.Core.Organizations.Aggregate
             if (!Roles.Contains(roleId))
             {
                 Roles.Add(roleId);
-            }
-        }
-
-        internal void AddUser(Guid userId)
-        {
-            if (!Users.Contains(userId))
-            {
-                Users.Add(userId);
-            }
-        }
-
-        internal void RemoveUser(Guid userId)
-        {
-            if (Users.Contains(userId))
-            {
-                Users.Remove(userId);
             }
         }
     }

@@ -52,6 +52,7 @@
     <Compile Include="Domain\IAggregateRepository.cs" />
     <Compile Include="Domain\IOriginator.cs" />
     <Compile Include="Domain\Memento.cs" />
+    <Compile Include="Events\IEventView.cs" />
     <Compile Include="Events\SnapshotCreated.cs" />
     <Compile Include="Exceptions\DuplicateQueueException - Copy.cs" />
     <Compile Include="ReflectionHelper.cs" />

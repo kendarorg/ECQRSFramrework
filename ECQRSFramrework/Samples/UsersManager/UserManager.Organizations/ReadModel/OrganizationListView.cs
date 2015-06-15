@@ -46,7 +46,7 @@ namespace UserManager.Core.Organizations.ReadModel
 
     
 
-    public class OrganizationListView : IEventHandler, IECQRSService
+    public class OrganizationListView : IEventView
     {
         private readonly IRepository<OrganizationListItem> _repository;
 
@@ -66,7 +66,10 @@ namespace UserManager.Core.Organizations.ReadModel
 
         public void Handle(OrganizationDeleted message)
         {
-            _repository.Delete(message.OrganizationId);
+            _repository.UpdateWhere(new
+            {
+                Deleted = true,
+            }, x=>x.Id == message.OrganizationId);
         }
 
         public void Handle(OrganizationModified message)

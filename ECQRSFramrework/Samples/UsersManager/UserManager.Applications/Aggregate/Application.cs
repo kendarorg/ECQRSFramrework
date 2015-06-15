@@ -41,7 +41,7 @@ namespace UserManager.Core.Applications.Aggregate
             Roles = new Dictionary<Guid, Role>();
         }
 
-        public bool IsDeleted { get; set; }
+        public bool Deleted { get; set; }
         public Guid Id { get; set; }
         public String Name { get; set; }
         public Dictionary<Guid, Permission> Permissions { get; set; }

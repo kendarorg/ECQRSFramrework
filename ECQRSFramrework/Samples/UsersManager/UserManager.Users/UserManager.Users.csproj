@@ -45,19 +45,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aggregate\Organization.cs" />
+    <Compile Include="Aggregate\Permission.cs" />
     <Compile Include="Aggregate\User.cs" />
+    <Compile Include="Commands\UserRightRemove.cs" />
+    <Compile Include="Commands\UserRightAssign.cs" />
+    <Compile Include="Commands\UserCreateWithGroup.cs" />
+    <Compile Include="Commands\UserOrganizationDeassociate.cs" />
+    <Compile Include="Commands\UserOrganizationAssociate.cs" />
     <Compile Include="Commands\UserCreate.cs" />
     <Compile Include="Commands\UserDelete.cs" />
     <Compile Include="Commands\UserModify.cs" />
     <Compile Include="Events\UserCreated.cs" />
     <Compile Include="Events\UserDeleted.cs" />
     <Compile Include="Events\UserModified.cs" />
+    <Compile Include="Events\UserOrganizationAssociated.cs" />
+    <Compile Include="Events\UserOrganizationDeassociated.cs" />
+    <Compile Include="Events\UserRightAssigned.cs" />
+    <Compile Include="Events\UserRightRemoved.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadModel\UsersDetailView.cs" />
     <Compile Include="ReadModel\UsersListView.cs" />
     <Compile Include="Services\HashService.cs" />
-    <Compile Include="UserCommandHandler.cs" />
     <Compile Include="Aggregate\UserItem.cs" />
+    <Compile Include="Services\PermissionsService.cs" />
+    <Compile Include="UserCommandHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\ECQRS.Commons\ECQRS.Commons.csproj">

@@ -44,9 +44,10 @@ namespace UserManager.Core.Applications.ReadModel
         public Guid ApplicationId { get; set; }
         public Guid RoleId { get; set; }
         public Guid PermissionId { get; set; }
+        public bool Deleted { get; set; }
     }
 
-    public class ApplicationRolesPermissionsView : IEventHandler, IECQRSService
+    public class ApplicationRolesPermissionsView : IEventView
     {
         private readonly IRepository<ApplicationRolePermissionItem> _repository;
 
@@ -68,26 +69,35 @@ namespace UserManager.Core.Applications.ReadModel
 
         public void Handle(ApplicationRolePermissionDeleted message)
         {
-            _repository.Delete(message.RolePermissionId);
+            _repository.UpdateWhere(new
+            {
+                Deleted = true,
+            }, a => a.Id == message.RolePermissionId);
         }
 
         public void Handle(ApplicationPermissionDeleted message)
         {
-            _repository.DeleteWhere(
-                x => x.ApplicationId == message.ApplicationId && x.PermissionId == message.PermissionId);
+            _repository.UpdateWhere(new
+            {
+                Deleted = true,
+            }, x => x.ApplicationId == message.ApplicationId && x.PermissionId == message.PermissionId);
 
         }
 
         public void Handle(ApplicationRoleDeleted message)
         {
-            _repository.DeleteWhere(
-                x => x.ApplicationId == message.ApplicationId && x.RoleId == message.RoleId);
+            _repository.UpdateWhere(new
+            {
+                Deleted = true,
+            }, x => x.ApplicationId == message.ApplicationId && x.RoleId == message.RoleId);
         }
 
         public void Handle(ApplicationDeleted message)
         {
-            _repository.DeleteWhere(
-                x => x.ApplicationId == message.ApplicationId);
+            _repository.UpdateWhere(new
+            {
+                Deleted = true,
+            }, x => x.ApplicationId == message.ApplicationId);
         }
     }
 }

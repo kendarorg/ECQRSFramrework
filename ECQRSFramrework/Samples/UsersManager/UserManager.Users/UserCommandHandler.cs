@@ -28,6 +28,7 @@
 using ECQRS.Commons.Commands;
 using ECQRS.Commons.Domain;
 using ECQRS.Commons.Interfaces;
+using ECQRS.Commons.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,8 @@ namespace UserManager.Core.Users
     {
         private readonly IAggregateRepository<UserItem> _repository;
 
-        public UserCommandHandler(IAggregateRepository<UserItem> repository)
+        public UserCommandHandler(
+            IAggregateRepository<UserItem> repository)
         {
             _repository = repository;
         }

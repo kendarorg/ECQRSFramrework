@@ -46,7 +46,7 @@ namespace UserManager.Core.Applications.ReadModel
         public string Description { get; set; }
     }
 
-    public class ApplicationRolesView : IEventHandler, IECQRSService
+    public class ApplicationRolesView : IEventView
     {
         private readonly IRepository<ApplicationRoleItem> _repository;
 
@@ -76,12 +76,18 @@ namespace UserManager.Core.Applications.ReadModel
 
         public void Handle(ApplicationRoleDeleted message)
         {
-            _repository.Delete(message.RoleId);
+            _repository.UpdateWhere(new
+            {
+                Deleted = true,
+            }, x=>x.Id ==  message.RoleId);
         }
 
         public void Handle(ApplicationDeleted message)
         {
-            _repository.DeleteWhere(x => x.ApplicationId == message.ApplicationId);
+            _repository.UpdateWhere(new
+            {
+                Deleted = true,
+            }, x => x.ApplicationId == message.ApplicationId);
         }
     }
 }

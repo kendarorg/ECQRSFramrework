@@ -42,11 +42,12 @@ namespace UserManager.Core.Applications.ReadModel
         [AutoGen(false)]
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public bool Deleted { get; set; }
     }
 
-    
 
-    public class ApplicationListView : IEventHandler, IECQRSService
+
+    public class ApplicationListView : IEventView
     {
         private readonly IRepository<ApplicationListItem> _repository;
 
@@ -66,7 +67,10 @@ namespace UserManager.Core.Applications.ReadModel
 
         public void Handle(ApplicationDeleted message)
         {
-            _repository.Delete(message.ApplicationId);
+            _repository.UpdateWhere(new
+            {
+                Deleted = true,
+            }, a => a.Id == message.ApplicationId);
         }
 
         public void Handle(ApplicationModified message)

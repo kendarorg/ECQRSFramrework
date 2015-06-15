@@ -48,8 +48,8 @@
     <Compile Include="Aggregate\Application.cs" />
     <Compile Include="Aggregate\Permission.cs" />
     <Compile Include="Aggregate\Role.cs" />
-    <Compile Include="ApplicationCommandHandler.cs" />
     <Compile Include="Aggregate\ApplicationItem.cs" />
+    <Compile Include="ApplicationCommandHandler.cs" />
     <Compile Include="Commands\ApplicationCreate.cs" />
     <Compile Include="Commands\ApplicationDelete.cs" />
     <Compile Include="Commands\ApplicationModify.cs" />

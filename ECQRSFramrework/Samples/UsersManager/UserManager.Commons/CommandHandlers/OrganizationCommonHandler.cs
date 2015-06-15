@@ -28,74 +28,70 @@
 using ECQRS.Commons.Commands;
 using ECQRS.Commons.Domain;
 using ECQRS.Commons.Interfaces;
+using ECQRS.Commons.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UserManager.Core.Applications;
+using UserManager.Core.Applications.ReadModel;
+using UserManager.Core.Organizations;
 using UserManager.Core.Organizations.Commands;
 
-namespace UserManager.Core.Organizations
+namespace UserManager.Commons.CommandHandlers
 {
-    public class OrganizationCommandHandler : IECQRSService, ICommandHandler
+    public class OrganizationCommonHandler : IECQRSService, ICommandHandler
     {
         private readonly IAggregateRepository<OrganizationItem> _repository;
+        private IAggregateRepository<ApplicationItem> _applications;
+        private IRepository<ApplicationListItem> _applicationList;
+        private IRepository<ApplicationRoleItem> _roles;
 
-        public OrganizationCommandHandler(IAggregateRepository<OrganizationItem> repository)
+        public OrganizationCommonHandler(IAggregateRepository<OrganizationItem> repository,
+            IAggregateRepository<ApplicationItem> applications, IRepository<ApplicationListItem> applicationList,IRepository<ApplicationRoleItem> roles)
         {
             _repository = repository;
+            _applications = applications;
+            _applicationList = applicationList;
+            _roles = roles;
         }
-
-        public void Handle(OrganizationCreate message)
+        
+        public void Handle(OrganizationRoleAdd message)
         {
-            var item = new OrganizationItem(
-                message.CorrelationId,
-                message.OrganizationId, 
-                message.Name);
+            var item = _repository.GetById(message.OrganizationId);
+            var app = _applications.GetById(message.ApplicationId);
+            var appItem = _applicationList.Get(app.Id);
+            var role = _roles.Get(message.RoleId);
+            item.SetLastCommand(message);
+            item.AddRole(app.Id,appItem.Name, role.Id,role.Code);
             _repository.Save(item, -1);
         }
 
-        public void Handle(OrganizationModify message)
+        public void Handle(OrganizationRoleDelete message)
         {
             var item = _repository.GetById(message.OrganizationId);
             item.SetLastCommand(message);
-            item.Modify(
-                message.Name);
+            item.DeleteRole(message.ApplicationId, message.RoleId);
             _repository.Save(item, -1);
         }
 
-        public void Handle(OrganizationDelete message)
+        public void Handle(OrganizationGroupRoleAdd message)
         {
             var item = _repository.GetById(message.OrganizationId);
+            var app = _applications.GetById(message.ApplicationId);
+            var appItem = _applicationList.Get(app.Id);
+            var role = _roles.Get(message.RoleId);
             item.SetLastCommand(message);
-            item.Delete();
+            item.AddRoleGroup(app.Id, appItem.Name, message.RoleId, role.Code, message.GroupId);
             _repository.Save(item, -1);
         }
 
-        public void Handle(OrganizationGroupCreate message)
+        public void Handle(OrganizationGroupRoleDelete message)
         {
             var item = _repository.GetById(message.OrganizationId);
             item.SetLastCommand(message);
-            item.AddGroup(message.GroupId, message.Code, message.Description);
-            _repository.Save(item, -1);
-        }
-
-        public void Handle(OrganizationGroupModify message)
-        {
-            var item = _repository.GetById(message.OrganizationId);
-            item.SetLastCommand(message);
-            item.ModifyGroup(
-                message.GroupId,
-                message.Code,
-                message.Description);
-            _repository.Save(item, -1);
-        }
-
-        public void Handle(OrganizationGroupDelete message)
-        {
-            var item = _repository.GetById(message.OrganizationId);
-            item.SetLastCommand(message);
-            item.DeleteGroup(message.GroupId);
+            item.DeleteRoleGroup( message.GroupId, message.RoleId);
             _repository.Save(item, -1);
         }
     }

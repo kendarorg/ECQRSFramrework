@@ -8,10 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using UserManager.Core.Applications.Events;
 using UserManager.Core.Organizations.Events;
+using UserManager.Organizations.Events;
 
 namespace UserManager.Commons.ReadModel
 {
-    public class OrganizationRoleItem : IEntity
+    public class OrganizationApplicationItem : IEntity
     {
         [AutoGen(false)]
         public Guid Id { get; set; }
@@ -19,15 +20,13 @@ namespace UserManager.Commons.ReadModel
         public string OrganizationName { get; set; }
         public Guid ApplicationId { get; set; }
         public string ApplicationName { get; set; }
-        public Guid RoleId { get; set; }
-        public string RoleCode { get; set; }
         public bool Deleted { get; set; }
     }
 
-    public class OrganizationRolesView : IEventView
+    public class OrganizationApplicationsView : IEventView
     {
-        private IRepository<OrganizationRoleItem> _repository;
-        public OrganizationRolesView(IRepository<OrganizationRoleItem> repository)
+        private IRepository<OrganizationApplicationItem> _repository;
+        public OrganizationApplicationsView(IRepository<OrganizationApplicationItem> repository)
         {
             _repository = repository;
         }
@@ -35,66 +34,38 @@ namespace UserManager.Commons.ReadModel
         public void Handle(OrganizationRoleAdded message)
         {
             var result = _repository.Where(ou => ou.OrganizationId == message.OrganizationId
-                && ou.RoleId == message.RoleId).FirstOrDefault();
+                && ou.ApplicationId == message.ApplicationId).FirstOrDefault();
             if (result != null) return;
-            _repository.Save(new OrganizationRoleItem
+            _repository.Save(new OrganizationApplicationItem
             {
                 Id = message.CorrelationId,
                 ApplicationId = message.ApplicationId,
                 ApplicationName = message.ApplicationName,
                 OrganizationId = message.OrganizationId,
-                OrganizationName = message.OrganizationName,
-                RoleCode = message.RoleCode,
-                RoleId = message.RoleId
+                OrganizationName = message.OrganizationName
             });
         }
 
-        public void Handle(OrganizationRoleDeleted message)
+        public void Handle(OrganizationDisconnectedFromApplication message)
         {
             var result = _repository.Where(ou => ou.OrganizationId == message.OrganizationId
-                && ou.RoleId == message.RoleId).FirstOrDefault();
+                && ou.ApplicationId == message.ApplicationId).FirstOrDefault();
 
             if (result == null) return;
             _repository.UpdateWhere(new
             {
                 Deleted = true,
-            }, x=>x.Id == result.Id);
+            }, x => x.Id == result.Id);
         }
 
         public void Handle(ApplicationModified message)
         {
             _repository.UpdateWhere(
-                new {
+                new
+                {
                     ApplicationName = message.Name
                 },
                 or => or.ApplicationId == message.ApplicationId);
-        }
-
-        public void Handle(ApplicationDeleted message)
-        {
-            _repository.UpdateWhere(new
-            {
-                Deleted = true,
-            }, or => or.ApplicationId == message.ApplicationId);
-        }
-
-        public void Handle(ApplicationRoleModified message)
-        {
-            _repository.UpdateWhere(
-                new
-                {
-                    RoleCode = message.Code
-                },
-                or => or.ApplicationId == message.ApplicationId && or.RoleId == message.RoleId);
-        }
-
-        public void Handle(ApplicationRoleDeleted message)
-        {
-            _repository.UpdateWhere(new
-            {
-                Deleted = true,
-            }, or => or.ApplicationId == message.ApplicationId
-                && or.RoleId == message.RoleId);
         }
 
         public void Handle(OrganizationModified message)
@@ -105,6 +76,14 @@ namespace UserManager.Commons.ReadModel
                     OrganizationName = message.Name
                 },
                 or => or.OrganizationId == message.OrganizationId);
+        }
+
+        public void Handle(ApplicationDeleted message)
+        {
+            _repository.UpdateWhere(new
+            {
+                Deleted = true,
+            }, or => or.ApplicationId == message.ApplicationId);
         }
 
         public void Handle(OrganizationDeleted message)

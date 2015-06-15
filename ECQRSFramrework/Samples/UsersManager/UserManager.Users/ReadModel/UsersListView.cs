@@ -56,7 +56,7 @@ namespace UserManager.Core.Users.ReadModel
         }
     }
 
-    public class UsersListView : IEventHandler, IECQRSService
+    public class UsersListView : IEventView
     {
         private readonly IRepository<UserListItem> _repository;
 

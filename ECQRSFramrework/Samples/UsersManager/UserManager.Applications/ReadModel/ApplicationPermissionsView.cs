@@ -44,9 +44,10 @@ namespace UserManager.Core.Applications.ReadModel
         public Guid ApplicationId { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
+        public bool Deleted { get; set; }
     }
 
-    public class ApplicationPermissionsView : IEventHandler, IECQRSService
+    public class ApplicationPermissionsView : IEventView
     {
         private readonly IRepository<ApplicationPermissionItem> _repository;
 
@@ -68,13 +69,19 @@ namespace UserManager.Core.Applications.ReadModel
 
         public void Handle(ApplicationPermissionDeleted message)
         {
-            _repository.Delete(message.PermissionId);
+            _repository.UpdateWhere(new
+            {
+                Deleted = true,
+            }, a => a.Id == message.PermissionId);
         }
 
         public void Handle(ApplicationDeleted message)
         {
 
-            _repository.DeleteWhere(x => x.ApplicationId == message.ApplicationId);
+            _repository.UpdateWhere(new
+            {
+                Deleted = true,
+            }, x => x.ApplicationId == message.ApplicationId);
 
         }
     }

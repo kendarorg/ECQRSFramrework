@@ -40,5 +40,13 @@ namespace UserManager.Core.Organizations.Events
         public Guid GroupId { get; set; }
         public Guid ApplicationId { get; set; }
         public Guid RoleId { get; set; }
+
+        public string RoleCode { get; set; }
+
+        public string GroupCode { get; set; }
+
+        public string ApplicationName { get; set; }
+
+        public string OrganizationName { get; set; }
     }
 }

@@ -49,13 +49,6 @@
     <Compile Include="Aggregate\OrganizationItem.cs" />
     <Compile Include="Aggregate\Group.cs" />
     <Compile Include="Aggregate\Role.cs" />
-    <Compile Include="Commands\OrganizationUserAssociate.cs" />
-    <Compile Include="Commands\OrganizationUserGroupAssociate.cs" />
-    <Compile Include="Commands\OrganizationUserDeassociate.cs" />
-    <Compile Include="Commands\OrganizationUserGroupDissociate.cs" />
-    <Compile Include="Events\OrganizationUserAssociated.cs" />
-    <Compile Include="Events\OrganizationUserDeassociated.cs" />
-    <Compile Include="OrganizationCommandHandler.cs" />
     <Compile Include="Commands\OrganizationCreate.cs" />
     <Compile Include="Commands\OrganizationDelete.cs" />
     <Compile Include="Commands\OrganizationModify.cs" />
@@ -68,6 +61,7 @@
     <Compile Include="Commands\OrganizationGroupRoleDelete.cs" />
     <Compile Include="Events\OrganizationCreated.cs" />
     <Compile Include="Events\OrganizationDeleted.cs" />
+    <Compile Include="Events\OrganizationDisconnectedFromApplication.cs" />
     <Compile Include="Events\OrganizationModified.cs" />
     <Compile Include="Events\OrganizationRoleDeleted.cs" />
     <Compile Include="Events\OrganizationRoleAdded.cs" />
@@ -76,6 +70,7 @@
     <Compile Include="Events\OrganizationGroupModified.cs" />
     <Compile Include="Events\OrganizationGroupRoleDeleted.cs" />
     <Compile Include="Events\OrganizationGroupRoleAdded.cs" />
+    <Compile Include="OrganizationCommandHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadModel\OrganizationListView.cs" />
     <Compile Include="ReadModel\OrganizationGroupView.cs" />

@@ -31,6 +31,7 @@ using ECQRS.Commons.Interfaces;
 using ECQRS.Commons.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,7 +59,7 @@ namespace UserManager.Commons.CommandHandlers
         public UserRightsHandler(
             IPermissionsService permissionsService,
             IAggregateRepository<UserItem> repository,
-            IAggregateRepository<ApplicationItem> applications, IRepository<ApplicationListItem> applicationList,IRepository<ApplicationRoleItem> roles,
+            IAggregateRepository<ApplicationItem> applications, IRepository<ApplicationListItem> applicationList, IRepository<ApplicationRoleItem> roles,
             IAggregateRepository<OrganizationItem> organizations, IRepository<OrganizationListItem> organizationList, IRepository<OrganizationGroupItem> groups)
         {
             _repository = repository;
@@ -73,10 +74,24 @@ namespace UserManager.Commons.CommandHandlers
 
         public void Handle(UserRightAssign message)
         {
-            var assigning = _repository.GetById(message.Assigning);
+            var appSecret = Guid.Parse(ConfigurationManager.AppSettings["AppSecret"]);
+            UserItem assigning = null;
+            try
+            {
+                assigning = _repository.GetById(message.Assigning);
+            }
+            catch
+            {
+                Console.WriteLine("User setup warning.");
+            }
             var assignee = _repository.GetById(message.Assignee);
 
-            if (_permissionsService.CanAssign(assigning.Id, assignee.Id, message.Permission, message.OrganizationId, message.GroupId))
+            if (assigning == null && message.Assigning == appSecret)
+            {
+                assignee.AssignRight(message.Assigning, message.Permission, message.OrganizationId, message.GroupId);
+                _repository.Save(assignee, -1);
+            }
+            else if (_permissionsService.CanAssign(assigning.Id, assignee.Id, message.Permission, message.OrganizationId, message.GroupId))
             {
                 assignee.AssignRight(assigning.Id, message.Permission, message.OrganizationId, message.GroupId);
                 _repository.Save(assignee, -1);

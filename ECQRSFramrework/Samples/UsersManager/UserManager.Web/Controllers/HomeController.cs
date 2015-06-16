@@ -25,18 +25,71 @@
 // ===========================================================
 
 
+using ECQRS.Commons.Commands;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using UserManager.Core;
+using UserManager.Core.Users.Commands;
+using UserManager.Model.Setup;
+using UserManager.Shared;
 
 namespace UserManager.Controllers
 {
     public class HomeController : Controller
     {
+        private IHashService _hashService;
+        private ICommandSender _bus;
+
+        public HomeController(ICommandSender bus, IHashService hashService)
+        {
+            _hashService = hashService;
+            _bus = bus;
+        }
+
         public ActionResult Index()
         {
+            return View();
+        }
+
+        public ActionResult Setup()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Setup(SetupAdmin data)
+        {
+            var appSecret = Guid.Parse(ConfigurationManager.AppSettings["AppSecret"]);
+
+            if (!Request.IsLocal || appSecret != data.Secret)
+            {
+                throw new Exception("Invalid action!");
+            }
+            var password = _hashService.CalculateHash(data.Password);
+            var id = Guid.NewGuid();
+            _bus.SendSync(new UserCreate
+            {
+                CorrelationId = id,
+                HashedPassword = password,
+                EMail = data.EMail,
+                UserName = data.UserName,
+                FirstName = "admin",
+                LastName = "admin",
+                UserId = id
+            });
+
+            _bus.SendSync(new UserRightAssign
+            {
+                Assigning = appSecret,
+                Assignee = id,
+                CorrelationId = id,
+                Permission = Permissions.SysAdmin
+            });
+
             return View();
         }
     }

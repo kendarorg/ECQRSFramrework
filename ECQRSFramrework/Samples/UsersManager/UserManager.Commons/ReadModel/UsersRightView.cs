@@ -57,6 +57,25 @@ namespace UserManager.Core.Users.ReadModel
             _repository = repository;
         }
 
+        public void Handle(UserRightAssigned message)
+        {
+            _repository.Save(new UsersRightItem
+            {
+                Id = Guid.NewGuid(),
+                UserId = message.Assignee,
+                Permission = message.Permission,
+                DataId = message.DataId
+            });
+        }
+
+        public void Handle(UserRightRemoved message)
+        {
+            _repository.UpdateWhere(new
+            {
+                Deleted = true,
+            }, x => x.Permission == message.Permission && x.DataId == message.DataId && x.UserId == message.Assignee);
+        }
+
         public void Handle(UserDeleted message)
         {
             _repository.UpdateWhere(new

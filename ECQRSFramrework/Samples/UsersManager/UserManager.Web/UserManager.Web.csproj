@@ -247,6 +247,7 @@
     <Compile Include="Model\Applications\ApplicationModifyModel.cs" />
     <Compile Include="Model\Applications\ApplicationRolePermissionModel.cs" />
     <Compile Include="Model\Organizations\OrganizationRoleModel.cs" />
+    <Compile Include="Model\Setup\SetupAdmin.cs" />
     <Compile Include="Model\Users\OrganizationRoleModel.cs" />
     <Compile Include="Model\Users\UserCreateModel.cs" />
     <Compile Include="Model\Users\UserModifyModel.cs" />
@@ -286,8 +287,6 @@
     <Content Include="app\application\role\edit\_data.html" />
     <Content Include="app\application\role\permission\module.js" />
     <Content Include="app\application\role\permission\_list.html" />
-    <Content Include="app\application\xxxuser\_list.html" />
-    <Content Include="app\application\xxxuser\module.js" />
     <Content Include="app\common\401.html" />
     <Content Include="app\common\controllers.js" />
     <Content Include="app\common\directives.js" />
@@ -417,6 +416,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
+    <Content Include="Views\Home\Setup.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

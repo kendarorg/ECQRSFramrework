@@ -77,7 +77,7 @@ namespace UserManager.Api
         // POST: api/Applications
         public void Post([FromBody]ApplicationPermissionCreateModel value)
         {
-            _bus.Send(new ApplicationPermissionAdd
+            _bus.SendSync(new ApplicationPermissionAdd
             {
                 Code = value.Code,
                 Description = value.Description,
@@ -90,7 +90,7 @@ namespace UserManager.Api
         public void Delete(Guid id)
         {
             var item = _list.Get(id);
-            _bus.Send(new ApplicationPermissionDelete { ApplicationId = item.ApplicationId, PermissionId = id });
+            _bus.SendSync(new ApplicationPermissionDelete { ApplicationId = item.ApplicationId, PermissionId = id });
         }
     }
 }

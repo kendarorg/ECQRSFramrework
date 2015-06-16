@@ -65,7 +65,7 @@ namespace UserManager.Api
             var where = _organizations.Where(a=> a.Deleted == false);
             if (parsedFilters.ContainsKey("Name")) where = where.Where(a => a.Name.Contains(parsedFilters["Name"].ToString()));
 
-            var realOrgUsers = _orgUsers.Where(u => u.UserId == userId).ToList();
+            var realOrgUsers = _orgUsers.Where(u => u.UserId == userId && u.Deleted == false).ToList();
 
             return where
                 .Skip(parsedRange.From).Take(parsedRange.Count)
@@ -78,7 +78,7 @@ namespace UserManager.Api
         [Route("api/UserOrganizations/{userId}")]
         public void Post(Guid userId, [FromBody]UserOrganizationModel value)
         {
-            _bus.Send(new UserOrganizationAssociate
+            _bus.SendSync(new UserOrganizationAssociate
             {
                 UserId = value.UserId,
                 OrganizationId = value.OrganizationId
@@ -87,10 +87,10 @@ namespace UserManager.Api
 
         // DELETE: api/Users/5
         [HttpDelete]
-        [Route("api/UserOrganizations/{userId}/{organizationId}/{id}")]
+        [Route("api/UserOrganizations/{userId}/{organizationId}")]
         public void Delete(Guid userId, Guid organizationId)
         {
-            _bus.Send(new UserOrganizationDeassociate
+            _bus.SendSync(new UserOrganizationDeassociate
             {
                 UserId = userId,
                 OrganizationId = organizationId

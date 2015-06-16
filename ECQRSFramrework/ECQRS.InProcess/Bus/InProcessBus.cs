@@ -92,6 +92,16 @@ namespace ECQRS.InProcess.Bus
             SendMessageInternal(queueId, messages);
         }
 
+        public void SendMessageSync(Message message, string queueId = null)
+        {
+            SendMessageInternalSync(queueId, new[] { message });
+        }
+
+        public void SendMessageSync(IEnumerable<Message> messages, string queueId = null)
+        {
+            SendMessageInternalSync(queueId, messages);
+        }
+
         private void SendMessageInternal(string queueId,IEnumerable<Message> messages)
         {
             if (string.IsNullOrWhiteSpace(queueId)) queueId = string.Empty;
@@ -146,10 +156,25 @@ namespace ECQRS.InProcess.Bus
             SendMessage(command, "ecqrs.commands");
         }
 
+        public void SendSync(params Command[] commands)
+        {
+            SendMessageSync(commands, "ecqrs.commands");
+        }
+
 
         public void Start()
         {
             _runner.Start();
+        }
+
+        public void SendMessageInternalSync(string queueId, IEnumerable<Message> messages)
+        {
+            if (string.IsNullOrWhiteSpace(queueId)) queueId = string.Empty;
+
+            if (_queues.ContainsKey(queueId))
+            {
+                _queues[queueId].RunSync(messages);
+            }
         }
     }
 }

@@ -75,7 +75,7 @@ namespace UserManager.Api
         // POST: api/Organizations
         public void Post([FromBody]OrganizationCreateModel value)
         {
-            _bus.Send(new OrganizationCreate
+            _bus.SendSync(new OrganizationCreate
             {
                 Name = value.Name,
                 OrganizationId = Guid.NewGuid()
@@ -85,7 +85,7 @@ namespace UserManager.Api
         // PUT: api/Organizations/5
         public void Put(Guid id, [FromBody]OrganizationModifyModel value)
         {
-            _bus.Send(new OrganizationModify
+            _bus.SendSync(new OrganizationModify
             {
                 Name = value.Name,
                 OrganizationId = value.Id
@@ -95,7 +95,7 @@ namespace UserManager.Api
         // DELETE: api/Organizations/5
         public void Delete(Guid id)
         {
-            _bus.Send(new OrganizationDelete { OrganizationId = id });
+            _bus.SendSync(new OrganizationDelete { OrganizationId = id });
         }
     }
 }

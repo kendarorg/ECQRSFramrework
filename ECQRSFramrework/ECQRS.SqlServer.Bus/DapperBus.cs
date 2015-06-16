@@ -77,6 +77,7 @@ namespace ECQRS.SqlServer.Bus
                 var somethingToDo = false;
                 using (var db = new SqlConnection(StartupInitializer.ConnectionString))
                 {
+                    db.Open();
                     var res = db.Query<MessageEntity>(
                         string.Format(
                             "SELECT * FROM [{0}] WHERE Reserved=@resId AND  Elaborated=@elab",
@@ -87,15 +88,16 @@ namespace ECQRS.SqlServer.Bus
                                 elab = false
                             }).FirstOrDefault();
                     somethingToDo = res != null;
-                }
-                if (somethingToDo)
-                {
-                    var keys = _queues.Keys.ToList();
-                    foreach (var key in keys)
+                    if (somethingToDo)
                     {
-                        _queues[key].Run();
+                        var keys = _queues.Keys.ToList();
+                        foreach (var key in keys)
+                        {
+                            _queues[key].Run(db);
+                        }
                     }
                 }
+                
             }
             catch (ThreadAbortException ta)
             {
@@ -208,6 +210,16 @@ namespace ECQRS.SqlServer.Bus
         public void SendMessage(IEnumerable<Message> messages, string queueId = null)
         {
             SendMessageInternal(queueId, messages);
+        }
+
+        public void SendMessageSync(Message message, string queueId = null)
+        {
+            SendMessageInternalSync(queueId, new[] { message });
+        }
+
+        public void SendMessageSync(IEnumerable<Message> messages, string queueId = null)
+        {
+            SendMessageInternalSync(queueId, messages);
         }
 
         public void SendMessageInternal(string queueId, IEnumerable<Message> messages)
@@ -327,11 +339,27 @@ namespace ECQRS.SqlServer.Bus
             SendMessage(commands, "ecqrs.commands");
         }
 
+        public void SendSync(params Command[] commands)
+        {
+            SendMessageSync(commands, "ecqrs.commands");
+        }
+
         public void Start()
         {
             if (StartupInitializer.IsServer)
             {
                 _timer.Start();
+            }
+        }
+
+        public void SendMessageInternalSync(string queueId, IEnumerable<Message> messages)
+        {
+            if (string.IsNullOrWhiteSpace(queueId)) queueId = string.Empty;
+
+            var subscriberId = SubscriberId();
+            if (_queues.ContainsKey(queueId))
+            {
+                _queues[queueId].RunSync(messages);
             }
         }
     }

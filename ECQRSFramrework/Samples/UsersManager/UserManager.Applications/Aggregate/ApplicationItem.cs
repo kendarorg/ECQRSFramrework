@@ -186,7 +186,7 @@ namespace UserManager.Core.Applications
             CheckDeleted();
             Check(!_application.HasRole(roleId), new AggregateException("Missing role " + code));
             ApplyChange(new ApplicationRoleModified
-            {
+            {   
                 CorrelationId = LastCommand,
                 ApplicationId = Id,
                 RoleId = roleId,
@@ -229,6 +229,7 @@ namespace UserManager.Core.Applications
             Check(_application.HasRolePermission(roleId, permissionId), new AggregateException("Permission " + permissionId + " already in role " + roleId));
             ApplyChange(new ApplicationRolePermssionAdded
             {
+                RolePermissionId = Guid.NewGuid(),
                 CorrelationId = LastCommand,
                 RoleId = roleId,
                 ApplicationId = Id,

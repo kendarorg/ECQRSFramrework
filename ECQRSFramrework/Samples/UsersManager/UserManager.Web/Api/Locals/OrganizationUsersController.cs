@@ -93,7 +93,7 @@ namespace UserManager.Api
         public void Delete(Guid organizationId, Guid userId)
         {
             var item = _orgUsers.Where(u => u.OrganizationId == organizationId && u.UserId == userId).ToList().FirstOrDefault();
-            _bus.Send(new UserOrganizationDeassociate
+            _bus.SendSync(new UserOrganizationDeassociate
             {
                 UserId = userId,
                 OrganizationId = organizationId

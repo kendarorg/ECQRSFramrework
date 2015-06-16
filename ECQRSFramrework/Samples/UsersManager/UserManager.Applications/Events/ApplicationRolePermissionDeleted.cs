@@ -36,7 +36,6 @@ namespace UserManager.Core.Applications.Events
 {
     public class ApplicationRolePermissionDeleted : Event
     {
-        public Guid RolePermissionId { get; set; }
         public Guid RoleId { get; set; }
         public Guid PermissionId { get; set; }
         public Guid ApplicationId { get; set; }

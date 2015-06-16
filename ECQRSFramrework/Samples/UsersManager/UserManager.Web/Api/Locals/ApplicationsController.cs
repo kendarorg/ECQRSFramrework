@@ -75,7 +75,7 @@ namespace UserManager.Api
         // POST: api/Applications
         public void Post([FromBody]ApplicationCreateModel value)
         {
-            _bus.Send(new ApplicationCreate
+            _bus.SendSync(new ApplicationCreate
             {
                 Name = value.Name,
                 ApplicationId = Guid.NewGuid()
@@ -85,7 +85,7 @@ namespace UserManager.Api
         // PUT: api/Applications/5
         public void Put(Guid id, [FromBody]ApplicationModifyModel value)
         {
-            _bus.Send(new ApplicationModify
+            _bus.SendSync(new ApplicationModify
             {
                 Name = value.Name,
                 ApplicationId = value.Id
@@ -95,7 +95,7 @@ namespace UserManager.Api
         // DELETE: api/Applications/5
         public void Delete(Guid id)
         {
-            _bus.Send(new ApplicationDelete { ApplicationId = id });
+            _bus.SendSync(new ApplicationDelete { ApplicationId = id });
         }
     }
 }

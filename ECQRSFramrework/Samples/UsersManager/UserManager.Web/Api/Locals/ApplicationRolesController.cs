@@ -90,7 +90,7 @@ namespace UserManager.Api
         // POST: api/Applications
         public void Post([FromBody]ApplicationRoleCreateModel value)
         {
-            _bus.Send(new ApplicationRoleCreate
+            _bus.SendSync(new ApplicationRoleCreate
             {
                 Code = value.Code,
                 Description = value.Description,
@@ -102,7 +102,7 @@ namespace UserManager.Api
         // PUT: api/Applications
         public void Put([FromBody]ApplicationRoleModifyModel value)
         {
-            _bus.Send(new ApplicationRoleModify
+            _bus.SendSync(new ApplicationRoleModify
             {
                 Code = value.Code,
                 Description = value.Description,
@@ -115,7 +115,7 @@ namespace UserManager.Api
         public void Delete(Guid id)
         {
             var item = _roles.Get(id);
-            _bus.Send(new ApplicationRoleDelete { ApplicationId = item.ApplicationId, RoleId = item.Id });
+            _bus.SendSync(new ApplicationRoleDelete { ApplicationId = item.ApplicationId, RoleId = item.Id });
         }
 
         [Route("api/ApplicationRoles/permissions/{applicationId}/{roleId}")]
@@ -158,7 +158,7 @@ namespace UserManager.Api
             if (applicationId == null) throw new HttpException(400, "Invalid application Id");
             if (roleId == null) throw new HttpException(400, "Invalid role Id");
 
-            _bus.Send(new ApplicationRolePermissionAdd
+            _bus.SendSync(new ApplicationRolePermissionAdd
             {
                 ApplicationId = applicationId.Value,
                 RoleId = roleId.Value,
@@ -177,7 +177,7 @@ namespace UserManager.Api
 
 
             var item = _rolesPermissions.Get(id.Value);
-            _bus.Send(new ApplicationRolePermissionDelete
+            _bus.SendSync(new ApplicationRolePermissionDelete
             {
                 ApplicationId = applicationId.Value,
                 RoleId = item.RoleId,

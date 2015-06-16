@@ -45,6 +45,7 @@ namespace ECQRS.MassTransit.Bus
     public interface IHasUnsubscribe
     {
         UnsubscribeAction Unsubscribe { get; set; }
+        void ConsumeGeneric(object obj);
     }
 
     public class InternalConsumer<T> : Consumes<T>.All, IHasUnsubscribe where T : class
@@ -67,7 +68,12 @@ namespace ECQRS.MassTransit.Bus
 
         public void Consume(T message)
         {
-            _method.Invoke(_handler, new[] {message });
+            _method.Invoke(_handler, new[] { message });
+        }
+
+        public void ConsumeGeneric(object message)
+        {
+            _method.Invoke(_handler, new[] { message });
         }
     }
 
@@ -197,6 +203,21 @@ namespace ECQRS.MassTransit.Bus
         internal void Publish(Message message)
         {
             _bus.GetEndpoint(new Uri(_massTransitRoot + "/" + _queueId.Trim('/')+".tx")).Send(message);
+        }
+
+        internal void RunSync(IEnumerable<Message> messages)
+        {
+            foreach (var message in messages)
+            {
+                var realType = message.GetType();
+                if (_subscriptions.ContainsKey(realType))
+                {
+                    foreach (var handler in _subscriptions[realType])
+                    {
+                        handler.Value.ConsumeGeneric(message);
+                    }
+                }
+            }
         }
     }
 }

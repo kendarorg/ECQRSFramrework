@@ -80,7 +80,7 @@ namespace UserManager.Api
         // POST: api/Users
         public void Post([FromBody]UserCreateModel value)
         {
-            _bus.Send(new UserCreateWithGroup
+            _bus.SendSync(new UserCreateWithGroup
             {
                 UserName = value.UserName,
                 FirstName = value.FirstName,
@@ -95,7 +95,7 @@ namespace UserManager.Api
         // PUT: api/Users/5
         public void Put(Guid id, [FromBody]UserModifyModel value)
         {
-            _bus.Send(new UserModify
+            _bus.SendSync(new UserModify
             {
                 UserName = value.UserName,
                 FirstName = value.FirstName,
@@ -108,7 +108,7 @@ namespace UserManager.Api
         // DELETE: api/Users/5
         public void Delete(Guid id)
         {
-            _bus.Send(new UserDelete { UserId = id });
+            _bus.SendSync(new UserDelete { UserId = id });
         }
     }
 }

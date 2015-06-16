@@ -31,5 +31,6 @@ namespace ECQRS.Commons.Commands
     public interface ICommandSender
     {
         void Send(params Command[] events);
+        void SendSync(params Command[] events);
     }
 }

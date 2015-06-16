@@ -88,7 +88,7 @@ namespace UserManager.Api
             {
                 var orgId = Guid.NewGuid();
                 orgs.Add(orgId);
-                _bus.Send(new OrganizationCreate
+                _bus.SendSync(new OrganizationCreate
                 {
                     OrganizationId = orgId,
                     Name = "org" + i
@@ -111,7 +111,7 @@ namespace UserManager.Api
                 var permissions = 6;
                 for (int j = 0; j < permissions; j++)
                 {
-                    _bus.Send(new OrganizationGroupCreate
+                    _bus.SendSync(new OrganizationGroupCreate
                     {
                         GroupId = Guid.NewGuid(),
                         OrganizationId = organization.Id,
@@ -138,7 +138,7 @@ namespace UserManager.Api
                 var permissions = 6;
                 for (int j = 0; j < permissions; j++)
                 {
-                    _bus.Send(new ApplicationPermissionAdd
+                    _bus.SendSync(new ApplicationPermissionAdd
                     {                        
                         PermissionId = Guid.NewGuid(),
                         ApplicationId = application.Id,
@@ -150,7 +150,7 @@ namespace UserManager.Api
                 var roles = 3;
                 for (int j = 0; j < roles; j++)
                 {
-                    _bus.Send(new ApplicationRoleCreate
+                    _bus.SendSync(new ApplicationRoleCreate
                     {                        
                         RoleId = Guid.NewGuid(),
                         ApplicationId = application.Id,
@@ -169,7 +169,7 @@ namespace UserManager.Api
             {
                 var aapId = Guid.NewGuid();
                 apps.Add(aapId);
-                _bus.Send(new ApplicationCreate
+                _bus.SendSync(new ApplicationCreate
                 {
                     ApplicationId = aapId,
                     Name = "app" + i
@@ -183,7 +183,7 @@ namespace UserManager.Api
             for (int i = 0; i < users; i++)
             {
                 var mail = (int)i % 10;
-                _bus.Send(new UserCreate
+                _bus.SendSync(new UserCreate
                 {
                     UserName = "user" + i,
                     FirstName = "First " + i,

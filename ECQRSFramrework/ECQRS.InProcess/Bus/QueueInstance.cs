@@ -99,5 +99,22 @@ namespace ECQRS.InProcess.Bus
             var action = handlerInstance.GetType().GetMethod("Handle", new[] {type});
             _subscriptions[type].Add(handlerInstance, o => action.Invoke(handlerInstance,new []{o}));
         }
+
+        internal void RunSync(IEnumerable<Message> messages)
+        {
+            foreach (var message in messages)
+            {
+                var type = message.GetType();
+                if (_subscriptions.ContainsKey(type))
+                {
+                    var keys = _subscriptions[type].Keys.ToList();
+
+                    foreach (var key in keys)
+                    {
+                        _subscriptions[type][key](message);
+                    }
+                }
+            }
+        }
     }
 }

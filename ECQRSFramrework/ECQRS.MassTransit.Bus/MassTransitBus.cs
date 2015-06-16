@@ -74,10 +74,20 @@ namespace ECQRS.MassTransit.Bus
             SendMessageInternal(queueId, messages);
         }
 
+        public void SendMessageSync(Message message, string queueId = null)
+        {
+            SendMessageInternalSync(queueId, new[] { message });
+        }
+
+        public void SendMessageSync(IEnumerable<Message> messages, string queueId = null)
+        {
+            SendMessageInternalSync(queueId, messages);
+        }
+
         public void SendMessageInternal(string queueId, IEnumerable<Message> messages)
         {
             if (string.IsNullOrWhiteSpace(queueId)) queueId = string.Empty;
-
+            
             foreach (var message in messages)
             {
                /* _queues[queueId]
@@ -128,6 +138,21 @@ namespace ECQRS.MassTransit.Bus
         public void Send(params Command[] commands)
         {
             SendMessage(commands, "ecqrs.commands");
+        }
+
+        public void SendSync(params Command[] commands)
+        {
+            SendMessageSync(commands, "ecqrs.commands");
+        }
+
+        public void SendMessageInternalSync(string queueId, IEnumerable<Message> messages)
+        {
+            if (string.IsNullOrWhiteSpace(queueId)) queueId = string.Empty;
+
+            if (_queues.ContainsKey(queueId))
+            {
+                _queues[queueId].RunSync(messages);
+            }
         }
 
 

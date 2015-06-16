@@ -61,27 +61,21 @@ namespace UserManager.Commons.ReadModel
 
         public void Handle(UserOrganizationGroupDeassociated message)
         {
-            var result = _repository.Where(ou => ou.OrganizationId == message.OrganizationId
-                && ou.UserId == message.UserId
-                && ou.GroupId == message.GroupId).FirstOrDefault();
-
-            if (result == null) return;
             _repository.UpdateWhere(new
             {
                 Deleted = true,
-            }, x=>x.Id == result.Id);
+            }, ou => ou.OrganizationId == message.OrganizationId
+                && ou.UserId == message.UserId
+                && ou.GroupId == message.GroupId);
         }
 
         public void Handle(UserOrganizationDeassociated message)
         {
-            var result = _repository.Where(ou => ou.OrganizationId == message.OrganizationId
-                && ou.UserId == message.UserId).FirstOrDefault();
-
-            if (result == null) return;
             _repository.UpdateWhere(new
             {
                 Deleted = true,
-            },x=> x.Id == result.Id);
+            }, ou => ou.OrganizationId == message.OrganizationId
+                && ou.UserId == message.UserId);
         }
 
         public void Handle(OrganizationModified message)

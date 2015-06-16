@@ -88,7 +88,7 @@ namespace UserManager.Api
         [Route("api/OrganizationRoles/{organizationId}")]
         public void Post(Guid organizationId, [FromBody]OrganizationRoleAddModel value)
         {
-            _bus.Send(new OrganizationRoleAdd
+            _bus.SendSync(new OrganizationRoleAdd
             {
                 OrganizationId = organizationId,
                 ApplicationId = value.ApplicationId,
@@ -102,7 +102,7 @@ namespace UserManager.Api
         public void Delete(Guid organizationId, Guid id)
         {
             var item = _organizationRoles.Get(id);
-            _bus.Send(new OrganizationRoleDelete { OrganizationId = item.OrganizationId, RoleId = item.RoleId });
+            _bus.SendSync(new OrganizationRoleDelete { OrganizationId = item.OrganizationId, RoleId = item.RoleId });
         }
     }
 }

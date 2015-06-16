@@ -102,7 +102,7 @@ namespace UserManager.Api
         // POST: api/Organizations
         public void Post([FromBody]OrganizationGroupCreateModel value)
         {
-            _bus.Send(new OrganizationGroupCreate
+            _bus.SendSync(new OrganizationGroupCreate
             {
                 Code = value.Code,
                 Description = value.Description,
@@ -114,7 +114,7 @@ namespace UserManager.Api
         // PUT: api/Organizations
         public void Put([FromBody]OrganizationGroupModifyModel value)
         {
-            _bus.Send(new OrganizationGroupModify
+            _bus.SendSync(new OrganizationGroupModify
             {
                 Code = value.Code,
                 Description = value.Description,
@@ -127,7 +127,7 @@ namespace UserManager.Api
         public void Delete(Guid id)
         {
             var item = _groups.Get(id);
-            _bus.Send(new OrganizationGroupDelete { OrganizationId = item.OrganizationId, GroupId = item.Id });
+            _bus.SendSync(new OrganizationGroupDelete { OrganizationId = item.OrganizationId, GroupId = item.Id });
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace UserManager.Api
             if (organizationId == null) throw new HttpException(400, "Invalid organization Id");
             if (groupId == null) throw new HttpException(400, "Invalid group Id");
 
-            _bus.Send(new OrganizationGroupRoleAdd
+            _bus.SendSync(new OrganizationGroupRoleAdd
             {
                 ApplicationId = value.ApplicationId,
                 OrganizationId = organizationId.Value,
@@ -193,7 +193,7 @@ namespace UserManager.Api
 
 
             var item = _groupsRoles.Get(id.Value);
-            _bus.Send(new OrganizationGroupRoleDelete
+            _bus.SendSync(new OrganizationGroupRoleDelete
             {
                 OrganizationId = organizationId.Value,
                 GroupId = groupId.Value,
@@ -232,7 +232,7 @@ namespace UserManager.Api
         [Route("api/OrganizationUsers/{organizationId}/{groupId}/{userId}")]
         public void AssociateUserWithGroup(Guid organizationId, Guid groupId, Guid userId)
         {
-            _bus.Send(new UserOrganizationGroupAssociate
+            _bus.SendSync(new UserOrganizationGroupAssociate
             {
                 OrganizationId = organizationId,
                 GroupId = groupId,
@@ -244,7 +244,7 @@ namespace UserManager.Api
         [Route("api/OrganizationUsers/{organizationId}/{groupId}/{userId}")]
         public void RemoveUserFromGroup(Guid organizationId, Guid groupId, Guid userId)
         {
-            _bus.Send(new UserOrganizationGroupDeassociate
+            _bus.SendSync(new UserOrganizationGroupDeassociate
             {
                 OrganizationId = organizationId,
                 GroupId = groupId,

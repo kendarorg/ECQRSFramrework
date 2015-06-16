@@ -72,7 +72,7 @@ namespace UserManager.Core.Applications.ReadModel
             _repository.UpdateWhere(new
             {
                 Deleted = true,
-            }, a => a.Id == message.RolePermissionId);
+            }, a => a.PermissionId == message.PermissionId && a.RoleId == message.RoleId);
         }
 
         public void Handle(ApplicationPermissionDeleted message)

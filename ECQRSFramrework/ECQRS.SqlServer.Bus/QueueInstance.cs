@@ -62,80 +62,76 @@ namespace ECQRS.SqlServer.Bus
             _types = new Dictionary<string, Type>();
         }
 
-        public void Run()
+        public void Run(SqlConnection db)
         {
-            using (var db = new SqlConnection(StartupInitializer.ConnectionString))
-            {
-                db.Open();
 
-                var cmd = new SqlCommand(string.Format(
-                    "UPDATE [{0}] SET Reserved=@resId OUTPUT INSERTED.id WHERE " +
-                    "QueueId=@qid AND Elaborated=@elab AND Reserved=@empty AND " +
-                    "(SubscriberId=@suid OR SubscriberId='global')", DapperBus.MESSAGES_TABLE));
-                cmd.Parameters.Add(new SqlParameter("@resId", _handler));
-                cmd.Parameters.Add(new SqlParameter("@qid", _queueId));
-                cmd.Parameters.Add(new SqlParameter("@elab", false));
-                cmd.Parameters.Add(new SqlParameter("@empty", Guid.Empty));
-                cmd.Parameters.Add(new SqlParameter("@suid", DapperBus.SubscriberId()));
-                cmd.Connection = db;
+            var cmd = new SqlCommand(string.Format(
+                "UPDATE [{0}] SET Reserved=@resId OUTPUT INSERTED.id WHERE " +
+                "QueueId=@qid AND Elaborated=@elab AND Reserved=@empty AND " +
+                "(SubscriberId=@suid OR SubscriberId='global')", DapperBus.MESSAGES_TABLE));
+            cmd.Parameters.Add(new SqlParameter("@resId", _handler));
+            cmd.Parameters.Add(new SqlParameter("@qid", _queueId));
+            cmd.Parameters.Add(new SqlParameter("@elab", false));
+            cmd.Parameters.Add(new SqlParameter("@empty", Guid.Empty));
+            cmd.Parameters.Add(new SqlParameter("@suid", DapperBus.SubscriberId()));
+            cmd.Connection = db;
 
-                var itemsModifiedCount = cmd.ExecuteNonQuery();
-                if (itemsModifiedCount == 0) return;
+            var itemsModifiedCount = cmd.ExecuteNonQuery();
+            if (itemsModifiedCount == 0) return;
 
 
 
-                var itemsModified =
-                    db.Query<MessageEntity>(
-                        string.Format(
-                            "SELECT * FROM [{0}] WHERE Reserved=@resId AND QueueId=@qid AND Elaborated=@elab " +
-                            "ORDER BY Timestamp ASC",
-                            DapperBus.MESSAGES_TABLE),
-                        new
-                        {
-                            resId = _handler,
-                            qid = _queueId,
-                            elab = false
-                        }).ToList();
-
-
-                foreach (var item in itemsModified)
-                {
-                    if (_types.ContainsKey(item.SubscriptionId))
+            var itemsModified =
+                db.Query<MessageEntity>(
+                    string.Format(
+                        "SELECT * FROM [{0}] WHERE Reserved=@resId AND QueueId=@qid AND Elaborated=@elab " +
+                        "ORDER BY Timestamp ASC",
+                        DapperBus.MESSAGES_TABLE),
+                    new
                     {
-                        var realType = _types[item.SubscriptionId];
-                        if (_subscriptions.ContainsKey(realType))
+                        resId = _handler,
+                        qid = _queueId,
+                        elab = false
+                    }).ToList();
+
+
+            foreach (var item in itemsModified)
+            {
+                if (_types.ContainsKey(item.SubscriptionId))
+                {
+                    var realType = _types[item.SubscriptionId];
+                    if (_subscriptions.ContainsKey(realType))
+                    {
+                        var realMessage = JsonConvert.DeserializeObject(item.Message, realType);
+                        foreach (var handler in _subscriptions[realType])
                         {
-                            var realMessage = JsonConvert.DeserializeObject(item.Message, realType);
-                            foreach (var handler in _subscriptions[realType])
+                            try
                             {
-                                try
-                                {
-                                    handler.Value(realMessage);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Debug.WriteLine(ex);
-                                }
+                                handler.Value(realMessage);
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine(ex);
                             }
                         }
                     }
-                    item.Elaborated = true;
-                    DapperRepository.UpdateGeneric(db, DapperBus.MESSAGES_TABLE,
-                        item);
-
-                    db.ExecuteScalar(
-                        string.Format(
-                            "UPDATE [{0}] SET Reserved=@empty WHERE " +
-                            "Reserved=@resId AND QueueId=@qid AND Elaborated=@elab",
-                            DapperBus.MESSAGES_TABLE),
-                        new
-                        {
-                            empty = Guid.Empty,
-                            resId = _handler,
-                            qid = _queueId,
-                            elab = false
-                        });
                 }
+                item.Elaborated = true;
+                DapperRepository.UpdateGeneric(db, DapperBus.MESSAGES_TABLE,
+                    item);
+
+                db.ExecuteScalar(
+                    string.Format(
+                        "UPDATE [{0}] SET Reserved=@empty WHERE " +
+                        "Reserved=@resId AND QueueId=@qid AND Elaborated=@elab",
+                        DapperBus.MESSAGES_TABLE),
+                    new
+                    {
+                        empty = Guid.Empty,
+                        resId = _handler,
+                        qid = _queueId,
+                        elab = false
+                    });
             }
         }
 
@@ -161,6 +157,21 @@ namespace ECQRS.SqlServer.Bus
             }
             var action = handlerInstance.GetType().GetMethod("Handle", new[] { type });
             _subscriptions[type].Add(handlerInstance, o => action.Invoke(handlerInstance, new[] { o }));
+        }
+
+        internal void RunSync(IEnumerable<Message> messages)
+        {
+            foreach (var message in messages)
+            {
+                var realType = message.GetType();
+                if (_subscriptions.ContainsKey(realType))
+                {
+                    foreach (var handler in _subscriptions[realType])
+                    {
+                        handler.Value(message);
+                    }
+                }
+            }
         }
     }
 }

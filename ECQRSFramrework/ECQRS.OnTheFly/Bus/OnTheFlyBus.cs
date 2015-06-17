@@ -115,7 +115,14 @@ namespace ECQRS.OnTheFly.Bus
 
         public void Publish(params Event[] events)
         {
-            SendMessageSync(events, "ecqrs.events");
+            try
+            {
+                SendMessageSync(events, "ecqrs.events");
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         public void Send(params Command[] command)

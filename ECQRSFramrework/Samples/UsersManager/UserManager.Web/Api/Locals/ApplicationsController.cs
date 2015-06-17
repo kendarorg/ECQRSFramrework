@@ -40,6 +40,7 @@ using UserManager.Model.Applications;
 
 namespace UserManager.Api
 {
+    [Authorize]
     public class ApplicationsController : ApiController
     {
         private IRepository<ApplicationListItem> _list;

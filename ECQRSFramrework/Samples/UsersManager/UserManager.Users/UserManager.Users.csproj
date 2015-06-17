@@ -48,6 +48,7 @@
     <Compile Include="Aggregate\Organization.cs" />
     <Compile Include="Aggregate\Permission.cs" />
     <Compile Include="Aggregate\User.cs" />
+    <Compile Include="Commands\UserLogin.cs" />
     <Compile Include="Commands\UserRightRemove.cs" />
     <Compile Include="Commands\UserRightAssign.cs" />
     <Compile Include="Commands\UserCreateWithGroup.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Commands\UserModify.cs" />
     <Compile Include="Events\UserCreated.cs" />
     <Compile Include="Events\UserDeleted.cs" />
+    <Compile Include="Events\UserLoggedIn.cs" />
     <Compile Include="Events\UserModified.cs" />
     <Compile Include="Events\UserOrganizationAssociated.cs" />
     <Compile Include="Events\UserOrganizationDeassociated.cs" />

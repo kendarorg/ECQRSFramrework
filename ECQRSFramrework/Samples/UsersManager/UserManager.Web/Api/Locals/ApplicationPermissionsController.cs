@@ -39,6 +39,7 @@ using UserManager.Model.Applications;
 
 namespace UserManager.Api
 {
+    [Authorize]
     public class ApplicationPermissionsController : ApiController
     {
         private readonly IRepository<ApplicationPermissionItem> _list;

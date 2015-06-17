@@ -1,0 +1,25 @@
+﻿<div style="width:300px;margin-left:auto;margin-right:auto;" ng-controller="loginController">
+    <form novalidate name="addNewForm" id="add-new-form" role="form" ng-submit="login(data)">
+        <fieldset>
+            <legend style="text-align:center;">Login</legend>
+            <div class="form-group">
+                <label for="EMail">User name or e-mail</label>
+                <input class="form-control" ng-model="data.UserId" required sg-show-error />
+            </div>
+            <div class="form-group">
+                <label for="Source">Password</label>
+                <input type="password" class="form-control" ng-model="data.Password" required sg-show-error />
+            </div>
+            <div class="form-group" style="text-align:center;">
+                <label for="RememberMe">
+                    Remember Me <input type="checkbox" ng-true-value="true" ng-false-value="false"
+                                       ng-model="data.RememberMe"
+                                       class="form-control" />
+                </label>
+            </div>
+            <div class="form-group" style="text-align:center;">
+                <input type="submit" value="Login!" class="btn btn-default submit" />
+            </div>
+        </fieldset>
+    </form>
+</div>

@@ -42,6 +42,7 @@ using UserManager.Core.Users.Commands;
 
 namespace UserManager.Api
 {
+    [Authorize]
     public class MaintenanceController : ApiController
     {
         private ICommandSender _bus;

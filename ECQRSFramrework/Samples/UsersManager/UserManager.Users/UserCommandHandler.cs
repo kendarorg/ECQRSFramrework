@@ -35,24 +35,44 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UserManager.Core.Users.Commands;
+using UserManager.Core.Users.ReadModel;
 
 namespace UserManager.Core.Users
 {
     public class UserCommandHandler : IECQRSService, ICommandHandler
     {
         private readonly IAggregateRepository<UserItem> _repository;
+        private IRepository<UserListItem> _users;
 
         public UserCommandHandler(
-            IAggregateRepository<UserItem> repository)
+            IAggregateRepository<UserItem> repository,
+            IRepository<UserListItem> users)
         {
             _repository = repository;
+            _users = users;
+        }
+
+        public void Handle(UserLogin message)
+        {
+            try
+            {
+                var user = _users.Where(u => u.UserName == message.UserId || u.EMail == message.UserId).FirstOrDefault();
+                var item = _repository.GetById(user.Id);
+                item.Login(message.UserId, message.HashedPassword);
+                _repository.Save(item, -1);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw new Exception("UserId or Password not valid, or user not existing.");
+            }
         }
 
         public void Handle(UserCreate message)
         {
             var item = new UserItem(
                 message.CorrelationId,
-                message.UserId, 
+                message.UserId,
                 message.UserName,
                 message.EMail,
                 message.HashedPassword,

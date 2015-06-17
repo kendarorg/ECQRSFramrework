@@ -41,6 +41,7 @@ using UserManager.Commons.ReadModel;
 
 namespace UserManager.Api
 {
+    [Authorize]
     public class OrganizationRolesController : ApiController
     {
         private readonly IRepository<OrganizationRoleItem> _organizationRoles;

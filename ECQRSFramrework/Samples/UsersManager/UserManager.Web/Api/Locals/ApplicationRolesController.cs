@@ -41,6 +41,7 @@ using UserManager.Core.Users.Commands;
 
 namespace UserManager.Api
 {
+    [Authorize]
     public class ApplicationRolesController : ApiController
     {
         private readonly IRepository<ApplicationRoleItem> _roles;

@@ -40,6 +40,7 @@ using UserManager.Model.Users;
 
 namespace UserManager.Api
 {
+    [Authorize]
     public class UsersController : ApiController
     {
         private IRepository<UserListItem> _list;

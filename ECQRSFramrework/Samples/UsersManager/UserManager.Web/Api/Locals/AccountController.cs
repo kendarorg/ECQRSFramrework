@@ -25,72 +25,66 @@
 // ===========================================================
 
 
+using System.Net;
+using System.Web;
 using ECQRS.Commons.Commands;
+using ECQRS.Commons.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using UserManager.Core;
+using System.Web.Http;
+using UserManager.Core.Applications.Commands;
+using UserManager.Core.Applications.ReadModel;
+using UserManager.Model.Applications;
+using UserManager.Model.Login;
 using UserManager.Core.Users.Commands;
-using UserManager.Model.Setup;
-using UserManager.Shared;
+using UserManager.Core;
+using System.Web.Security;
+using UserManager.Core.Users.ReadModel;
 
-namespace UserManager.Controllers
+namespace UserManager.Api
 {
-    public class HomeController : Controller
+    public class AccountController : ApiController
     {
-        private IHashService _hashService;
         private ICommandSender _bus;
+        private IHashService _hashing;
+        private IRepository<UserListItem> _users;
 
-        public HomeController(ICommandSender bus, IHashService hashService)
+        public AccountController(IRepository<UserListItem> users, ICommandSender bus,IHashService hashing)
         {
-            _hashService = hashService;
             _bus = bus;
-        }
-
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        public ActionResult Setup()
-        {
-            return View();
+            _hashing = hashing;
+            _users = users;
         }
 
         [HttpPost]
-        public ActionResult Setup(SetupAdmin data)
+        [AllowAnonymous]
+        [Route("api/Account/Login")]
+        public LoginResult Login(LoginModel model)
         {
-            var appSecret = Guid.Parse(ConfigurationManager.AppSettings["AppSecret"]);
-
-            if (!Request.IsLocal || appSecret != data.Secret)
+            _bus.SendSync(new UserLogin
             {
-                throw new Exception("Invalid action!");
-            }
-            var password = _hashService.CalculateHash(data.Password);
-            var id = Guid.NewGuid();
-            _bus.SendSync(new UserCreate
-            {
-                CorrelationId = id,
-                HashedPassword = password,
-                EMail = data.EMail,
-                UserName = data.UserName,
-                FirstName = "admin",
-                LastName = "admin",
-                UserId = id
+                HashedPassword = _hashing.CalculateHash(model.Password),
+                UserId = model.UserId,
+                RememberMe = model.RememberMe
             });
+            FormsAuthentication.SetAuthCookie(model.UserId, false);
 
-            _bus.SendSync(new UserRightAssign
+            var user = _users.Where(u => u.UserName == model.UserId || u.EMail == model.UserId).FirstOrDefault();
+            return new LoginResult
             {
-                Assigning = appSecret,
-                Assignee = id,
-                CorrelationId = id,
-                Permission = Permissions.SysAdmin
-            });
+                EMail = user.EMail,
+                IsAuthorized = true,
+                UserName = user.UserName
+            };
+        }
 
-            return View("SetupCompleted");
+        [HttpGet]
+        [Authorize]
+        [Route("api/Account/Logoff")]
+        public void Logoff()
+        {
+            FormsAuthentication.SignOut();
         }
     }
 }

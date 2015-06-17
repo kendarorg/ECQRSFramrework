@@ -1,25 +1,35 @@
-﻿<form method="post">
-    <fieldset>
-        <legend>Add Customer</legend>
-        <div>
-            <label for="UserName">UserName:</label>
-            <input type="text" name="UserName" value="" />
-        </div>
-        <div>
-            <label for="EMail">EMail:</label>
-            <input type="text" name="EMail" value="" />
-        </div>
-        <div>
-            <label for="Password">Password:</label>
-            <input type="text" name="Password" value="" />
-        </div>
-        <div>
-            <label for="Secret">Secret:</label>
-            <input type="text" name="Secret" value="" />
-        </div>
-        <div>
-            <label>&nbsp;</label>
-            <input type="submit" value="Submit" class="submit" />
-        </div>
-    </fieldset>
-</form>
+﻿<div style="width:300px;margin-left:15px;">
+    <form novalidate name="addNewForm" id="add-new-form" role="form" method="post">
+        <fieldset>
+            <legend>Add Administrator</legend>
+            <div class="form-group">
+                <label for="FirstName">First Name</label>
+                <input type="text" class="form-control" name="FirstName" />
+            </div>
+            <div class="form-group">
+                <label for="LastName">Last Name</label>
+                <input type="text" class="form-control" name="LastName" />
+            </div>
+            <div class="form-group">
+                <label for="EMail">EMail</label>
+                <input type="email" class="form-control" name="EMail" />
+            </div>
+            <div class="form-group">
+                <label for="UserName">UserName</label>
+                <input type="text" class="form-control" name="UserName" />
+            </div>
+            <div class="form-group">
+                <label for="Secret">Secret</label>
+                <input type="text" class="form-control" name="Secret" />
+            </div>
+
+            <div class="form-group">
+                <label for="Source">Password</label>
+                <input type="password" class="form-control" name="Password" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-default submit" />
+            </div>
+        </fieldset>
+    </form>
+</div>

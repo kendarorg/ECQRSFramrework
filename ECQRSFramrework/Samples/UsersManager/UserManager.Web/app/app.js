@@ -1,8 +1,9 @@
-var app = angular.module('app', ['ngRoute', 'sgDialogService', 'sgGrid', 'sgDropdown','sgShowError',
+var app = angular.module('app', ['ngRoute', 'sgDialogService', 'sgGrid', 'sgDropdown', 'sgShowError', 'ngCookies',
         'usersModule',
         'applicationsModule',
         'organizationsModule',
-        'maintenanceModule'
+        'maintenanceModule',
+        'loginModule'
 ]);
 
 app.run(["sgDialogService.config",function(sgDialogServiceConfig){
@@ -22,6 +23,9 @@ app.config(['$routeProvider',
 	    $routeProvider.
         when('/home/', {
             templateUrl: 'app/home.html'
+        }).
+        when('/login/', {
+            templateUrl: 'app/login/login.html'
         }).
         when('/401/', {
             templateUrl: 'app/common/401.html'

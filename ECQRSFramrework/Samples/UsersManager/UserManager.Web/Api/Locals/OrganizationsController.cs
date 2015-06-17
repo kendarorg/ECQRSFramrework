@@ -40,6 +40,7 @@ using UserManager.Model.Organizations;
 
 namespace UserManager.Api
 {
+    [Authorize]
     public class OrganizationsController : ApiController
     {
         private IRepository<OrganizationListItem> _list;

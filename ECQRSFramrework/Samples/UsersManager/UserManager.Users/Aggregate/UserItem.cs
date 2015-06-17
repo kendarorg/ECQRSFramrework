@@ -270,5 +270,33 @@ namespace UserManager.Core.Users
             });
         }
         #endregion Rights
+
+        public void Login(string userId, string hashedPassword)
+        {
+            if (_user.Deleted)
+            {
+                throw new ArgumentException("Invalid User Id");
+            }
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                throw new ArgumentException("Invalid User Id");
+            }
+            if (!string.Equals(_user.UserName, userId) && !string.Equals(_user.EMail, userId))
+            {
+                throw new ArgumentException("Invalid User Id");
+            }
+            if (!string.Equals(_user.HashedPassword, hashedPassword))
+            {
+                throw new ArgumentException("Invalid User Id");
+            }
+            ApplyChange(new UserLoggedIn
+            {
+                CorrelationId = LastCommand,
+                UserId = Id,
+                UserName = _user.UserName,
+                EMail = _user.EMail,
+                Timestamp = DateTime.UtcNow
+            });
+        }
     }
 }

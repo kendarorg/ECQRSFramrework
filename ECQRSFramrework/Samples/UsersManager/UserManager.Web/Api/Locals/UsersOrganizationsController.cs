@@ -42,6 +42,7 @@ using UserManager.Model.Users;
 
 namespace UserManager.Api
 {
+    [Authorize]
     public class UsersOrganizationsController : ApiController
     {
         private IRepository<OrganizationListItem> _organizations;

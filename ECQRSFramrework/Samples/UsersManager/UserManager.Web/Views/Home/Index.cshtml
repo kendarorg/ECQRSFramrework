@@ -1,27 +1,30 @@
 ﻿@* ReSharper disable Html.PathError *@
-<script type="text/javascript" src="app/app.js"></script>
-<script type="text/javascript" src="app/user/module.js"></script>
-<script type="text/javascript" src="app/user/organization/module.js"></script>
+<script type="text/javascript" src="~/app/app.js"></script>
 
-<script type="text/javascript" src="app/application/module.js"></script>
-<script type="text/javascript" src="app/application/permission/module.js"></script>
-<script type="text/javascript" src="app/application/role/module.js"></script>
-<script type="text/javascript" src="app/application/role/permission/module.js"></script>
+<script type="text/javascript" src="~/app/login/module.js"></script>
 
-<script type="text/javascript" src="app/organization/module.js"></script>
-<script type="text/javascript" src="app/organization/role/module.js"></script>
-<script type="text/javascript" src="app/organization/user/module.js"></script>
-<script type="text/javascript" src="app/organization/group/module.js"></script>
-<script type="text/javascript" src="app/organization/group/role/module.js"></script>
-<script type="text/javascript" src="app/organization/group/user/module.js"></script>
+<script type="text/javascript" src="~/app/user/module.js"></script>
+<script type="text/javascript" src="~/app/user/organization/module.js"></script>
 
-<script type="text/javascript" src="app/maintenance/module.js"></script>
+<script type="text/javascript" src="~/app/application/module.js"></script>
+<script type="text/javascript" src="~/app/application/permission/module.js"></script>
+<script type="text/javascript" src="~/app/application/role/module.js"></script>
+<script type="text/javascript" src="~/app/application/role/permission/module.js"></script>
+
+<script type="text/javascript" src="~/app/organization/module.js"></script>
+<script type="text/javascript" src="~/app/organization/role/module.js"></script>
+<script type="text/javascript" src="~/app/organization/user/module.js"></script>
+<script type="text/javascript" src="~/app/organization/group/module.js"></script>
+<script type="text/javascript" src="~/app/organization/group/role/module.js"></script>
+<script type="text/javascript" src="~/app/organization/group/user/module.js"></script>
+
+<script type="text/javascript" src="~/app/maintenance/module.js"></script>
 @* ReSharper restore Html.PathError *@
 
 <div ng-app="app">
 
     <!-- Static navbar -->
-    <nav class="navbar navbar-inverse">
+    <nav class="navbar navbar-inverse" ng-controller="loggedUserController">
         <div class="container">
             <div class="navbar-header">
                 <!--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -35,23 +38,29 @@
             <!--<div id="navbar" class="navbar-collapse collapse">-->
             <div id="navbar" class="">
                 <ul class="nav navbar-nav">
-                    <li><a href="#/user">Users</a></li>
-                    <li><a href="#/application">Applications</a></li>
-                    <li><a href="#/organization">Organizations</a></li>
-                    <li><a href="#/maintenance">Maintenance</a></li>
+                    <li ng-if="loggedUser"><a href="#/user">Users</a></li>
+                    <li ng-if="loggedUser"><a href="#/application">Applications</a></li>
+                    <li ng-if="loggedUser"><a href="#/organization">Organizations</a></li>
+                    <li ng-if="loggedUser"><a href="#/maintenance">Maintenance</a></li>
                     <li><a href="/Help/Index">APIs Documentation</a></li>
                     <!--<li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li class="divider"></li>
-                            <li class="dropdown-header">Nav header</li>
-                            <li><a href="#">Separated link</a></li>
-                            <li><a href="#">One more separated link</a></li>
-                        </ul>
-                    </li>-->
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+            </ul>
+        </li>-->
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li ng-if="loggedUser"><a>{{loggedUserId}}</a></li>
+                    <li ng-if="loggedUser"><a href ng-click="logOff()">LogOff</a></li>
+                    <li ng-if="!loggedUser"><a ng-href="#/login">LogIn</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->

@@ -43,6 +43,7 @@ using UserManager.Commons.ReadModel;
 
 namespace UserManager.Api
 {
+    [Authorize]
     public class OrganizationUsersController : ApiController
     {
         private readonly IRepository<OrganizationGroupItem> _groups;

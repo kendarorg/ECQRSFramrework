@@ -183,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\AngularApiUtils.cs" />
+    <Compile Include="Api\Locals\AccountController.cs" />
     <Compile Include="Api\Locals\OrganizationUsersController.cs" />
     <Compile Include="Api\Locals\OrganizationRolesController.cs" />
     <Compile Include="Api\Locals\OrganizationGroupsController.cs" />
@@ -191,7 +192,7 @@
     <Compile Include="Api\Locals\OrganizationsController.cs" />
     <Compile Include="Api\Locals\ApplicationsController.cs" />
     <Compile Include="Api\Locals\UsersOrganizationsController.cs" />
-    <Compile Include="Api\MaintenanceController.cs" />
+    <Compile Include="Api\Locals\MaintenanceController.cs" />
     <Compile Include="Api\Locals\UsersController.cs" />
     <Compile Include="Api\MembershipApi.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -233,6 +234,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Model\Login\LoginModel.cs" />
+    <Compile Include="Model\Login\LoginPermission.cs" />
+    <Compile Include="Model\Login\LoginResult.cs" />
     <Compile Include="Model\Organizations\OrganizationCreateModel.cs" />
     <Compile Include="Model\Organizations\OrganizationGroupUserModel.cs" />
     <Compile Include="Model\Organizations\OrganizationModifyModel.cs" />
@@ -255,6 +259,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
+    <Content Include="app\login\login.html" />
+    <Content Include="app\login\module.js" />
     <Content Include="app\organization\edit.html" />
     <Content Include="app\organization\edit\_data.html" />
     <Content Include="app\organization\group\user\module.js" />
@@ -307,6 +313,7 @@
     <Content Include="fonts\font-awesome.css" />
     <Content Include="fonts\font-awesome.min.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="lib\angular\angular-cookies.min.js" />
     <Content Include="lib\sgShowError\sgShowError.html" />
     <Content Include="app\common\module.js" />
     <Content Include="app\common\services.js" />
@@ -417,6 +424,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
     <Content Include="Views\Home\Setup.cshtml" />
+    <Content Include="Views\Home\SetupCompleted.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -66,8 +66,16 @@ namespace UserManager.Api
             var organizationRoles = _organizationRoles.Where(a => a.OrganizationId == organizationId.Value && a.Deleted == false).ToList();
 
             var where = _applicationRoles.Where(a => a.Deleted == false);
-            if (parsedFilters.ContainsKey("Code")) where = where.Where(a => a.Code.Contains(parsedFilters["Code"].ToString()));
-            if (parsedFilters.ContainsKey("ApplicationName")) where = where.Where(a => a.ApplicationName.Contains(parsedFilters["ApplicationName"].ToString()));
+            if (parsedFilters.ContainsKey("Code"))
+            {
+                var item = parsedFilters["Code"].ToString();
+                where = where.Where(a => a.Code.Contains(item));
+            }
+            if (parsedFilters.ContainsKey("ApplicationName"))
+            {
+                var item = parsedFilters["ApplicationName"].ToString();
+                where = where.Where(a => a.ApplicationName.Contains(item));
+            }
 
             return where
                 .Skip(parsedRange.From).Take(parsedRange.Count)

@@ -29,6 +29,33 @@ namespace System.Collections.Generic
 
     public static class JoinUtil
     {
+        public static IEnumerable<T> DoSkip<T>(this IEnumerable<T> coll,int count)
+        {
+            foreach (var item in coll)
+            {
+                if (count < 0)
+                {
+                    yield return item;
+                }
+                count--;
+            }
+        }
+
+        public static IEnumerable<T> DoTake<T>(this IEnumerable<T> coll,int count)
+        {
+            foreach (var item in coll)
+            {
+                if (count >= 0)
+                {
+                    yield return item;
+                }
+                else {
+                    yield break;
+                }
+                count--;
+            }
+        }
+
         public static IEnumerable<JoinResult<K, T>> InnerJoin<K, T, D>(this IEnumerable<K> left, IEnumerable<T> right, Func<K, D> lkey, Func<T, D> rkey) 
             where K:class 
             where T:class

@@ -77,7 +77,7 @@ namespace UserManager.Api
             if (parsedFilters.ContainsKey("Description")) where = where.Where(a => a.Description.Contains(parsedFilters["Description"].ToString()));
 
             return where
-                .Skip(parsedRange.From).Take(parsedRange.Count);
+                .DoSkip(parsedRange.From).DoTake(parsedRange.Count);
         }
 
         // GET: api/Applications/5/1
@@ -128,15 +128,17 @@ namespace UserManager.Api
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
 
 
+            //Retrieve the permissions for the given application/role
             var associatedPermissions = _rolesPermissions.Where(p => p.RoleId == roleId.Value && p.ApplicationId == applicationId.Value && p.Deleted == false)
                 .ToList();
 
+            //Retrieve all the permissions exposed by the application
             var wherePermissions = _permissions.Where(a => a.ApplicationId == applicationId.Value && a.Deleted == false);
             if (parsedFilters.ContainsKey("Code")) wherePermissions = wherePermissions.Where(a => a.Code.Contains(parsedFilters["Code"].ToString()));
             if (parsedFilters.ContainsKey("Description")) wherePermissions = wherePermissions.Where(a => a.Description.Contains(parsedFilters["Description"].ToString()));
             
-            return wherePermissions.ToList()
-                .Skip(parsedRange.From).Take(parsedRange.Count)
+            return wherePermissions
+                .DoSkip(parsedRange.From).DoTake(parsedRange.Count)
                 .Select(u =>
                 {
                     var item = u.ToApplicationRolePermissionModel(roleId.Value);

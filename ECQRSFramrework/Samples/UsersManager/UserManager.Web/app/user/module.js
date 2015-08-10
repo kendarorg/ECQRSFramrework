@@ -18,7 +18,7 @@ users.service('usersDataService', [function () {
     this.editMessage = function (item) { return "Editing user '" + getName(item) + "'"; }
     this.createMessage = function () { return "Create user"; }
 
-    this.list = function (currentPage, pageSize, count, filter) {
+    this.list = function (currentPage, pageSize, count, filter,scope) {
         var realFilter = {};
         var didSomething = false;
         for (var prop in filter) {

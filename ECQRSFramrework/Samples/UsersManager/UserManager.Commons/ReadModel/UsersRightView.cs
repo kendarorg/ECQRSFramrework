@@ -44,7 +44,8 @@ namespace UserManager.Core.Users.ReadModel
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public string Permission { get; set; }
-        public Guid DataId { get; set; }
+        [DbType("TEXT")]
+        public string Data { get; set; }
         public bool Deleted { get; set; }
     }
 
@@ -64,16 +65,17 @@ namespace UserManager.Core.Users.ReadModel
                 Id = Guid.NewGuid(),
                 UserId = message.Assignee,
                 Permission = message.Permission,
-                DataId = message.DataId
+                Data = string.Join(";", message.Data.Select(a=>a.ToString()))
             });
         }
 
         public void Handle(UserRightRemoved message)
         {
+            var data = string.Join(";", message.Data.Select(a => a.ToString()));
             _repository.UpdateWhere(new
             {
                 Deleted = true,
-            }, x => x.Permission == message.Permission && x.DataId == message.DataId && x.UserId == message.Assignee);
+            }, x => x.Permission == message.Permission && x.Data == data && x.UserId == message.Assignee);
         }
 
         public void Handle(UserDeleted message)
@@ -86,18 +88,20 @@ namespace UserManager.Core.Users.ReadModel
 
         public void Handle(OrganizationDeleted message)
         {
+            var data = message.OrganizationId.ToString();
             _repository.UpdateWhere(new
             {
                 Deleted = true,
-            }, x => x.DataId == message.OrganizationId);
+            }, x => x.Data.Contains(data));
         }
 
         public void Handle(OrganizationGroupDeleted message)
         {
+            var data = message.GroupId.ToString();
             _repository.UpdateWhere(new
             {
                 Deleted = true,
-            }, x => x.DataId == message.OrganizationId);
+            }, x => x.Data.Contains(data));
         }
     }
 }

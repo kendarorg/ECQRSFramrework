@@ -10,10 +10,13 @@ namespace UserManager.Core.Users.Commands
 {
     public class UserRightAssign : Command
     {
+        public UserRightAssign()
+        {
+            Data = new Guid[] { };
+        }
         public Guid Assigning { get; set; }
         public Guid Assignee { get; set; }
         public String Permission { get; set; }
-        public Guid OrganizationId { get; set; }
-        public Guid GroupId { get; set; }
+        public Guid[] Data { get; set; }
     }
 }

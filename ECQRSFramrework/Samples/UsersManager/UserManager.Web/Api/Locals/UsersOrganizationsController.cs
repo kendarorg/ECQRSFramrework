@@ -69,7 +69,7 @@ namespace UserManager.Api
             var realOrgUsers = _orgUsers.Where(u => u.UserId == userId && u.Deleted == false).ToList();
 
             return where
-                .Skip(parsedRange.From).Take(parsedRange.Count)
+                .DoSkip(parsedRange.From).DoTake(parsedRange.Count)
                 .ToList()
                 .Select(o => o.ToUserOrganizationModel(realOrgUsers, userId));
         }

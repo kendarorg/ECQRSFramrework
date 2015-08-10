@@ -40,7 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IHashService.cs" />
+    <Compile Include="IOrganizationsService.cs" />
     <Compile Include="IPermissionsService.cs" />
+    <Compile Include="IPermissionsServiceFactory.cs" />
     <Compile Include="UserManagerPermission.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

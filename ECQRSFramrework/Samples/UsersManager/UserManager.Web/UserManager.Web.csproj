@@ -191,6 +191,7 @@
     <Compile Include="Api\Locals\ApplicationPermissionsController.cs" />
     <Compile Include="Api\Locals\OrganizationsController.cs" />
     <Compile Include="Api\Locals\ApplicationsController.cs" />
+    <Compile Include="Api\Locals\PermissionsController.cs" />
     <Compile Include="Api\Locals\UsersOrganizationsController.cs" />
     <Compile Include="Api\Locals\MaintenanceController.cs" />
     <Compile Include="Api\Locals\UsersController.cs" />
@@ -251,6 +252,7 @@
     <Compile Include="Model\Applications\ApplicationModifyModel.cs" />
     <Compile Include="Model\Applications\ApplicationRolePermissionModel.cs" />
     <Compile Include="Model\Organizations\OrganizationRoleModel.cs" />
+    <Compile Include="Model\Permissions\UserPermissions.cs" />
     <Compile Include="Model\Setup\SetupAdmin.cs" />
     <Compile Include="Model\Users\OrganizationRoleModel.cs" />
     <Compile Include="Model\Users\UserCreateModel.cs" />
@@ -303,6 +305,8 @@
     <Content Include="app\home.html" />
     <Content Include="app\maintenance\home.html" />
     <Content Include="app\maintenance\module.js" />
+    <Content Include="app\permissions\module.js" />
+    <Content Include="app\permissions\tree.html" />
     <Content Include="app\user\organization\module.js" />
     <Content Include="app\user\organization\_list.html" />
     <Content Include="app\user\edit\_data.html" />
@@ -394,6 +398,9 @@
     <Content Include="app\organization\group\role\source.json" />
     <Content Include="app\organization\group\source.json" />
     <Content Include="app\organization\source.json" />
+    <Content Include="lib\sgGrid\sgGrid.1.0.0.min.js.map">
+      <DependentUpon>sgGrid.1.0.0.min.js</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />

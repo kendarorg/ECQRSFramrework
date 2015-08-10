@@ -60,7 +60,10 @@ angular.module('sgGrid',[])
 						selected:r.selected,
 						//Here we use the this.pageIndex. If we use i, we will
 						//use its reference!!!
-						go:function(){scope.sgLoadData()(this.pageIndex);}
+						go: function () {
+						    console.log(this.pageIndex);
+						    scope.sgLoadData()(this.pageIndex);
+						}
 					});
 				}
 				//Set the buttons
@@ -100,11 +103,12 @@ angular.module('sgGrid',[])
 			});
 		}
 
-		var halfMaxPages = pd.maxPages/2;
+		var halfMaxPages = Math.floor(pd.maxPages / 2);
 		startAt = 0;
 		if(pd.currentPage > halfMaxPages){
 			startAt = pd.currentPage - halfMaxPages;
 		}
+		//console.log(startAt + " " + pd.currentPage + " " + halfMaxPages);
 		totalPages = Math.ceil(pd.count/pd.pageSize);
 		lastPage = Math.min(startAt+pd.maxPages,totalPages);
 			
@@ -126,7 +130,7 @@ angular.module('sgGrid',[])
 				createButton('>>',totalPages-1);
 			}
 		}
-		
+		//console.log(buttons);
 		return buttons;
 	}
 }]);

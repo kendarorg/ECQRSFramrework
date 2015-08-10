@@ -227,13 +227,16 @@ namespace UserManager.Core.Applications
             Check(!_application.HasRole(roleId), new AggregateException("Missing role " + roleId));
             Check(!_application.HasPermission(permissionId), new AggregateException("Missing permission " + permissionId));
             Check(_application.HasRolePermission(roleId, permissionId), new AggregateException("Permission " + permissionId + " already in role " + roleId));
+            var permission = _application.Permissions.First(p=>p.Key==permissionId).Value;
             ApplyChange(new ApplicationRolePermssionAdded
             {
                 RolePermissionId = Guid.NewGuid(),
                 CorrelationId = LastCommand,
                 RoleId = roleId,
                 ApplicationId = Id,
-                PermissionId = permissionId
+                PermissionId = permission.Id,
+                Code = permission.Code,
+                Description = permission.Description
             });
         }
 

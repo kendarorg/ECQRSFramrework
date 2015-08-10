@@ -228,7 +228,7 @@ namespace UserManager.Core.Users
 
         #region Rights
 
-        public void RemoveRight(Guid assigning, string permission, Guid orgId, Guid groupId)
+        public void RemoveRight(Guid assigning, string permission, Guid[] data)
         {
             CheckDeleted();
             ApplyChange(new UserRightRemoved
@@ -237,16 +237,34 @@ namespace UserManager.Core.Users
                 Assignee = Id,
                 Assigning = assigning,
                 Permission = permission,
-                DataId = orgId != Guid.Empty ? orgId : groupId
+                Data= data
             });
         }
 
         public void Apply(UserRightRemoved message)
         {
-            _user.Permissions = _user.Permissions.Where(p => (p.Name != message.Permission && p.DataId != message.DataId)).ToList();
+            for(var i=_user.Permissions.Count()-1;i>=0;i--)
+            {
+                var p = _user.Permissions[i];
+                if(p.Name != message.Permission) continue;
+                if(p.Data.Length < message.Data.Length) continue;
+
+
+                var counter = Math.Min(p.Data.Length,message.Data.Length);
+                var matching = true;
+                for(var j = 0;j< counter;j++)
+                {
+                    if(p.Data[j]!=message.Data[j]){
+                        matching = false;
+                        break;
+                    }
+                }
+                if(!matching) continue;
+                _user.Permissions.RemoveAt(i);
+            }
         }
 
-        public void AssignRight(Guid assigning, string permission, Guid orgId, Guid groupId)
+        public void AssignRight(Guid assigning, string permission, Guid[] data)
         {
             CheckDeleted();
             ApplyChange(new UserRightAssigned
@@ -255,17 +273,32 @@ namespace UserManager.Core.Users
                 Assignee = Id,
                 Assigning = assigning,
                 Permission = permission,
-                DataId = orgId != Guid.Empty ? orgId : groupId
+                Data = data
             });
         }
 
         public void Apply(UserRightAssigned message)
         {
-            if (!_user.Permissions.Any(p => p.Name == message.Permission && p.DataId == message.DataId)) return;
+            for (var i = _user.Permissions.Count() - 1; i >= 0; i--)
+            {
+                var p = _user.Permissions[i];
+                if (p.Name != message.Permission) continue;
+                if (p.Data.Length != message.Data.Length) continue;
+                var matching = true;
+                for (var j = 0; j < p.Data.Length; j++)
+                {
+                    if (p.Data[j] != message.Data[j])
+                    {
+                        matching = false;
+                        break;
+                    }
+                }
+                if (matching) return;
+            }
 
             _user.Permissions.Add(new Permission
             {
-                DataId = message.DataId,
+                Data = message.Data,
                 Name = message.Permission
             });
         }

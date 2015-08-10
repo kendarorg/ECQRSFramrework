@@ -67,7 +67,7 @@ namespace UserManager.Api
             if (parsedFilters.ContainsKey("UserName")) where = where.Where(a => a.UserName.Contains(parsedFilters["UserName"].ToString()));
 
             return where
-                .Skip(parsedRange.From).Take(parsedRange.Count);
+                .DoSkip(parsedRange.From).DoTake(parsedRange.Count);
         }
 
         // GET: api/Users/5

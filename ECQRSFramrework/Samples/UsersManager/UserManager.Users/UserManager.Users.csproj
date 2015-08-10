@@ -70,6 +70,7 @@
     <Compile Include="ReadModel\UsersListView.cs" />
     <Compile Include="Services\HashService.cs" />
     <Compile Include="Aggregate\UserItem.cs" />
+    <Compile Include="Services\PermissionServicesFactory.cs" />
     <Compile Include="Services\PermissionsService.cs" />
     <Compile Include="UserCommandHandler.cs" />
   </ItemGroup>

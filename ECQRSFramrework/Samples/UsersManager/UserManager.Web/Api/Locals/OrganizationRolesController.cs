@@ -55,7 +55,7 @@ namespace UserManager.Api
             _bus = bus;
         }
 
-        // GET: api/Organizations
+        // GET: api/Organizations  TODO HERE COME TROUBLES
         [Route("api/OrganizationRoles/list/{organizationId}")]
         public IEnumerable<OrganizationRoleModel> GetList(Guid? organizationId, string range = null, string filter = null)
         {
@@ -63,7 +63,9 @@ namespace UserManager.Api
             var parsedRange = AngularApiUtils.ParseRange(range);
             var parsedFilters = AngularApiUtils.ParseFilter(filter);
 
-            var organizationRoles = _organizationRoles.Where(a => a.OrganizationId == organizationId.Value && a.Deleted == false).ToList();
+            var organizationRoles = _organizationRoles.Where(a => 
+                a.OrganizationId == organizationId.Value && 
+                a.Deleted == false).ToList();
 
             var where = _applicationRoles.Where(a => a.Deleted == false);
             if (parsedFilters.ContainsKey("Code"))
@@ -77,10 +79,12 @@ namespace UserManager.Api
                 where = where.Where(a => a.ApplicationName.Contains(item));
             }
 
-            return where
-                .Skip(parsedRange.From).Take(parsedRange.Count)
-                .ToList()
-                .Select(i => i.ToOrganizationRoleModel(organizationRoles));
+            var result = where
+                .DoSkip(parsedRange.From).DoTake(parsedRange.Count)
+                .ToList();
+            var result2 = result
+                .Select(i => i.ToOrganizationRoleModel(organizationRoles)).ToList();
+            return result2;
         }
 
         // GET: api/Organizations/5/1

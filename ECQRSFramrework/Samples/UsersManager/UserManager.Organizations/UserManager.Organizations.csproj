@@ -74,6 +74,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadModel\OrganizationListView.cs" />
     <Compile Include="ReadModel\OrganizationGroupView.cs" />
+    <Compile Include="Services\OrganizationsService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\ECQRS.Commons\ECQRS.Commons.csproj">

@@ -89,7 +89,7 @@ namespace UserManager.Api
             if (parsedFilters.ContainsKey("Description")) where = where.Where(a => a.Description.Contains(parsedFilters["Description"].ToString()));
 
             return where
-                .Skip(parsedRange.From).Take(parsedRange.Count);
+                .DoSkip(parsedRange.From).DoTake(parsedRange.Count);
         }
 
         // GET: api/Organizations/5/1
@@ -163,7 +163,7 @@ namespace UserManager.Api
             var associatedRoles = _groupsRoles.Where(p => p.GroupId == groupId.Value && p.OrganizationId == organizationId.Value && p.Deleted == false).ToList();
 
             return allRolesList
-                .Skip(parsedRange.From).Take(parsedRange.Count)
+                .DoSkip(parsedRange.From).DoTake(parsedRange.Count)
                 .Select(r => r.ToOrganizationGroupRoleModel(associatedRoles, organizationId.Value, groupId.Value));
         }
 
@@ -224,7 +224,7 @@ namespace UserManager.Api
 
             return where
                 .Where(u => organizationUsers.Contains(u.Id))
-                .Skip(parsedRange.From).Take(parsedRange.Count)
+                .DoSkip(parsedRange.From).DoTake(parsedRange.Count)
                 .ToList()
                 .Select(u=>u.ToOrganizationGroupUserModel(groupUserIds,organizationId,groupId));
         }

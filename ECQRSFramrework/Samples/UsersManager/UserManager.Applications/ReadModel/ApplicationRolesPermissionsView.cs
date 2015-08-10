@@ -45,6 +45,8 @@ namespace UserManager.Core.Applications.ReadModel
         public Guid RoleId { get; set; }
         public Guid PermissionId { get; set; }
         public bool Deleted { get; set; }
+        public string Code { get; set; }
+        public string Descripion { get; set; }
     }
 
     public class ApplicationRolesPermissionsView : IEventView
@@ -62,8 +64,10 @@ namespace UserManager.Core.Applications.ReadModel
             {
                 ApplicationId = message.ApplicationId,
                 PermissionId = message.PermissionId,
+                Code = message.Code,
                 RoleId = message.RoleId,
-                Id = message.RolePermissionId
+                Id = message.RolePermissionId,
+                Descripion = message.Description
             });
         }
 

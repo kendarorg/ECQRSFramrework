@@ -3,7 +3,8 @@ var app = angular.module('app', ['ngRoute', 'sgDialogService', 'sgGrid', 'sgDrop
         'applicationsModule',
         'organizationsModule',
         'maintenanceModule',
-        'loginModule'
+        'loginModule',
+        'permissionsModule'
 ]);
 
 app.run(["sgDialogService.config",function(sgDialogServiceConfig){
@@ -62,6 +63,12 @@ app.config(['$routeProvider',
 	        templateUrl: 'app/maintenance/home.html'
 	    })
 	    /* Maintenance part-end */
+
+	    /* Permissions tree part-begin */
+	    when('/permissions/', {
+	        templateUrl: 'app/permissions/tree.html'
+	    })
+	    /* Permissions tree part-end */
 	    ;
 	}]);
 

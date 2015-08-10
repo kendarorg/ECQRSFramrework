@@ -11,9 +11,13 @@ namespace UserManager.Core.Users.Events
 {
     public class UserRightRemoved : Event
     {
+        public UserRightRemoved()
+        {
+            Data = new Guid[] { };
+        }
         public Guid Assigning { get; set; }
         public Guid Assignee { get; set; }
         public String Permission { get; set; }
-        public Guid DataId { get; set; }
+        public Guid[] Data { get; set; }
     }
 }

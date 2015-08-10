@@ -85,7 +85,7 @@ namespace UserManager.Api
             if (organizationUsers.Count == 0) return new List<UserListItem>();
             return where
                 .Where(u => organizationUsers.Contains(u.Id))
-                .Skip(parsedRange.From).Take(parsedRange.Count)
+                .DoSkip(parsedRange.From).DoTake(parsedRange.Count)
                 .ToList();
         }
 

@@ -21,7 +21,7 @@
 
             var start = currentPage * pageSize;
             var end = start + count;
-            
+            console.log(start + "/" + end);
             var result = "/api/OrganizationRoles/list/" + encodeURI(scope.item.Id) + "?range=[" + start + "," + end + "]";
             if (didSomething) {
                 result += "&filter=" + encodeURI(JSON.stringify(realFilter));
@@ -62,8 +62,8 @@ organizations.controller('organizationRolesListController', ['$scope', '$http', 
 	        $scope: $scope,
 	        dataService: organizationsDataService
 	    });
-	    $scope.pageSize = 5;
-	    $scope.maxPages = 5;
+	    $scope.pageSize = 6;
+	    $scope.maxPages = 6;
 
 	    $scope.associate = function (rolePermission) {
 	        $http.post(organizationsDataService.add(rolePermission, $scope), rolePermission).

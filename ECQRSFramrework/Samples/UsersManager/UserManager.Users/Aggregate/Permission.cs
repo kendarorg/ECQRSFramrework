@@ -8,7 +8,11 @@ namespace UserManager.Core.Users.Aggregate
 {
     public class Permission
     {
+        public Permission()
+        {
+            Data = new Guid[] { };
+        }
         public string Name { get; set; }
-        public Guid DataId { get; set; }
+        public Guid[] Data { get; set; }
     }
 }

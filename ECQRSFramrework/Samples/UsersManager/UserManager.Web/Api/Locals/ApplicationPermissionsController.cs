@@ -64,7 +64,7 @@ namespace UserManager.Api
             if (parsedFilters.ContainsKey("Description")) where = where.Where(a => a.Description.Contains(parsedFilters["Description"].ToString()));
 
             return where
-                .Skip(parsedRange.From).Take(parsedRange.Count);
+                .DoSkip(parsedRange.From).DoTake(parsedRange.Count);
         }
         
         // GET: api/Applications/5/1

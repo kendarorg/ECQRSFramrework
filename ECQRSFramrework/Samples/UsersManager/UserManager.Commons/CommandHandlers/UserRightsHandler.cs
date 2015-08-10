@@ -54,10 +54,10 @@ namespace UserManager.Commons.CommandHandlers
         private IAggregateRepository<ApplicationItem> _applications;
         private IRepository<ApplicationListItem> _applicationList;
         private IRepository<ApplicationRoleItem> _roles;
-        private IPermissionsService _permissionsService;
+        private IPermissionsServiceFactory _permissionsService;
 
         public UserRightsHandler(
-            IPermissionsService permissionsService,
+            IPermissionsServiceFactory permissionsService,
             IAggregateRepository<UserItem> repository,
             IAggregateRepository<ApplicationItem> applications, IRepository<ApplicationListItem> applicationList, IRepository<ApplicationRoleItem> roles,
             IAggregateRepository<OrganizationItem> organizations, IRepository<OrganizationListItem> organizationList, IRepository<OrganizationGroupItem> groups)
@@ -75,6 +75,8 @@ namespace UserManager.Commons.CommandHandlers
         public void Handle(UserRightAssign message)
         {
             var appSecret = Guid.Parse(ConfigurationManager.AppSettings["AppSecret"]);
+
+            //User that assign right
             UserItem assigning = null;
             try
             {
@@ -84,29 +86,66 @@ namespace UserManager.Commons.CommandHandlers
             {
                 Console.WriteLine("User setup warning.");
             }
-            var assignee = _repository.GetById(message.Assignee);
 
-            if (assigning == null && message.Assigning == appSecret)
+            //User that receive rights
+            var assignee = _repository.GetById(message.Assignee);
+            var canProceed = false;
+            if (IsSetup(message, appSecret, assigning))
             {
-                assignee.AssignRight(message.Assigning, message.Permission, message.OrganizationId, message.GroupId);
+                canProceed = true;
+            }
+            else
+            {
+                var permissionsService = _permissionsService.Create(message.Assigning,message.Assignee);
+                if (message.Data.Length == 0)    //And therefore group
+                {
+                    canProceed = permissionsService.CanAssignGlobalRight(message.Permission);
+                }
+                else
+                {
+                    canProceed = permissionsService.CanAssignSpecificRight(message.Permission, message.Data);
+                }
+            }
+            if (canProceed)
+            {
+                assignee.AssignRight(message.Assigning, message.Permission, message.Data);
                 _repository.Save(assignee, -1);
             }
-            else if (_permissionsService.CanAssign(assigning.Id, assignee.Id, message.Permission, message.OrganizationId, message.GroupId))
+            else
             {
-                assignee.AssignRight(assigning.Id, message.Permission, message.OrganizationId, message.GroupId);
-                _repository.Save(assignee, -1);
+                throw new Exception("Not authorized!");
             }
+        }
+
+        private static bool IsSetup(UserRightAssign message, Guid appSecret, UserItem assigning)
+        {
+            return assigning == null && message.Assigning == appSecret;
         }
 
         public void Handle(UserRightRemove message)
         {
             var assigning = _repository.GetById(message.Assigning);
             var assignee = _repository.GetById(message.Assignee);
+            var canProceed = false;
 
-            if (_permissionsService.CanAssign(assigning.Id, assignee.Id, message.Permission, message.OrganizationId, message.GroupId))
+            var permissionsService = _permissionsService.Create(message.Assigning, message.Assignee);
+            if (message.Data.Length == 0)    //And therefore group
             {
-                assignee.RemoveRight(assigning.Id, message.Permission, message.OrganizationId, message.GroupId);
+                canProceed = permissionsService.CanRemoveGlobalRight(message.Permission);
+            }
+            else
+            {
+                canProceed = permissionsService.CanRemoveSpecificRight(message.Permission, message.Data);
+            }
+
+            if (canProceed)
+            {
+                assignee.RemoveRight(assigning.Id, message.Permission, message.Data);
                 _repository.Save(assignee, -1);
+            }
+            else
+            {
+                throw new Exception("Not authorized!");
             }
         }
         /*

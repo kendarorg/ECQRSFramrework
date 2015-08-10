@@ -3,6 +3,8 @@
 
 <script type="text/javascript" src="~/app/login/module.js"></script>
 
+<script type="text/javascript" src="~/app/permissions/module.js"></script>
+
 <script type="text/javascript" src="~/app/user/module.js"></script>
 <script type="text/javascript" src="~/app/user/organization/module.js"></script>
 
@@ -39,6 +41,7 @@
             <div id="navbar" class="">
                 <ul class="nav navbar-nav">
                     <li ng-if="loggedUser"><a href="#/user">Users</a></li>
+                    <li ng-if="loggedUser"><a href="#/permisssions">Permissions</a></li>
                     <li ng-if="loggedUser"><a href="#/application">Applications</a></li>
                     <li ng-if="loggedUser"><a href="#/organization">Organizations</a></li>
                     <li ng-if="loggedUser"><a href="#/maintenance">Maintenance</a></li>

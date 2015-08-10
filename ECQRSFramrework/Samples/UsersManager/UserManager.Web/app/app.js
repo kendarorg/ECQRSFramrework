@@ -61,7 +61,7 @@ app.config(['$routeProvider',
 	    /* Maintenance part-begin */
 	    when('/maintenance/', {
 	        templateUrl: 'app/maintenance/home.html'
-	    })
+	    }).
 	    /* Maintenance part-end */
 
 	    /* Permissions tree part-begin */
